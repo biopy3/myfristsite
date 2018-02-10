@@ -43,7 +43,7 @@ def save_post(request):
         return 0
 
     def construc_tree(file_name_with_path,file_name):
-        phyml = PhymlCommandline(input=file_name_with_path + '.phy',outfile=file_name+".nwk")
+        phyml = PhymlCommandline(input=file_name_with_path + '.phy')
         phyml()
         return 0
 
