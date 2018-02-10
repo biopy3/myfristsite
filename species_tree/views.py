@@ -25,6 +25,8 @@ import copy
 ape = importr('ape')
 base = importr('base')
 
+def display(request):
+    return render(request,"display.html")
 def home_page(request):
     return render(request,"home.html")
 
@@ -133,15 +135,15 @@ def save_post(request):
 
 
     if request.method == "POST":
-        try:
-            user_name = request.POST.get("user", None)
-            inputfile = request.FILES["inputfile"]
-            email = request.POST.get("email", None)
-            record = Records.objects.create(user=user_name, inputfile=inputfile, submit_date=datetime.now(), email=email)
-            print("Submit successfully,waiting for minites to redirect result page.")
-            generate_tree(record)
-            return
-        except:
-            HttpResponse("Please input completely the information,try again!")
+        #try:
+        user_name = request.POST.get("user")
+        inputfile = request.FILES["inputfile"]
+        email = request.POST.get("email")
+        record = Records.objects.create(user=user_name, inputfile=inputfile, submit_date=datetime.now(), email=email)
+        # print("Submit successfully,waiting for minites to redirect result page.")
+        generate_tree(record)
+        return HttpResponseRedirect('/species_tree/display/')
+        #except:
+    # return HttpResponse("Please input completely the information,try again!")
     else:
         return HttpResponse("Input error,please again!")
