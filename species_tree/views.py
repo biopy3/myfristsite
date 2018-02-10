@@ -127,7 +127,7 @@ def save_post(request):
         construc_tree(file_name_with_path,file_name)
 
         distance_dataframe = compute_pairwise_distance(file_name_with_path)
-        results = parse_tree(distance_dataframe)
+        results = parse_tree(file_name_with_path,distance_dataframe)
         plot(results)
 
         modify_tree(file_name_with_path,file_name,distance_dataframe, 0.025)
