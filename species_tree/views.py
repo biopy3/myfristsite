@@ -67,7 +67,7 @@ def save_post(request):
         return distance_dataframe
 
     def parse_tree(file_name_with_path,distance_dataframe):
-        tree = Phylo.read(file_name_with_path + ".phy_phyml_stats.txt", "newick")
+        tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
         li_0 = []
         for clade in tree.get_nonterminals():
             li = list(itertools.combinations(clade, 2))
