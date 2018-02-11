@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h3>Input Data</h3>
+    <hr/>
+    <form method="post" enctype="multipart/form-data" action="/save_post/">
+        {% csrf_token %}
+        <label for="user">Your name: </label>
+        <input id="user" type="text" name="user"><br/>
+        <label for="email">Your Email: </label>
+        <input id="email" type="email" name="email"><br/>
+        <input id="inputfile" type="file" name="inputfile"><br/>
+        <input type="submit" value="submit">
+    </form>
+</body>
+</html>
