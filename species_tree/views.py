@@ -60,7 +60,7 @@ def save_post(request):
                 "F81", "K81", "F84", "BH87", "T92", "TN93", "GG95", "logdet", "paralin", "indel", or "indelblock".
         '''
        
-        distance = ape.dist_dna(r_alignments_data, model=model, as_matrix=True)
+        distance = ape.dist_dna_(r_alignments_data, model=model, as_matrix=True)
         index = list(pandas2ri.ri2py(distance.rownames))
         distance_numpy = pandas2ri.ri2py(distance)
         distance_dataframe = pd.DataFrame(distance_numpy, index=index, columns=index)
