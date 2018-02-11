@@ -61,8 +61,8 @@ def save_post(request):
         '''
        
         distance = ape.dist_dna(r_alignments_data, model=model, as_matrix=True)
-        index = list(pandas2ri.ri2py_listvector(distance.rownames))
-        distance_numpy = pandas2ri.ri2py_listvector(distance)
+        index = list(pandas2ri.ri2py(distance.rownames))
+        distance_numpy = pandas2ri.ri2py(distance)
         distance_dataframe = pd.DataFrame(distance_numpy, index=index, columns=index)
         return distance_dataframe
 
