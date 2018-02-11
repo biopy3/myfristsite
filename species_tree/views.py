@@ -8,16 +8,15 @@ import os,sys
 from Bio.Align.Applications import ClustalwCommandline
 #from Bio.Align.Applications import MuscleCommandline
 from Bio.Phylo.Applications import PhymlCommandline
-#from Bio import AlignIO
 from Bio import Phylo
 import itertools,pydot
-#from rpy2.robjects import DataFrame,Matrix
+from rpy2.robjects import DataFrame,Matrix
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.packages import importr
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use('TkAgg')
+#import matplotlib
+#matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 #import matplotlib.mlab as mlab
 from Bio import AlignIO
@@ -60,7 +59,8 @@ def save_post(request):
                 must be one of "raw", "N", "TS", "TV", "JC69", "K80" (the default),
                 "F81", "K81", "F84", "BH87", "T92", "TN93", "GG95", "logdet", "paralin", "indel", or "indelblock".
         '''
-        distance = ape.dist_dna_(r_alignments_data, model=model, as_matrix=True)
+       
+        distance = ape.dist_dna(r_alignments_data, model=model, as_matrix=True)
         index = list(pandas2ri.ri2py_listvector(distance.rownames))
         distance_numpy = pandas2ri.ri2py_listvector(distance)
         distance_dataframe = pd.DataFrame(distance_numpy, index=index, columns=index)
