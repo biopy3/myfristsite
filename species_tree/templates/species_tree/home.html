@@ -57,12 +57,12 @@
       <a href="">
         <img style="float:left;" id="toplogo" height="150" width="150"
         src="{% static 'image/icon_tree.png' %}"
-        alt="UCD logo" />
+        alt="ISDL logo" />
       </a>
         <img style="float:right;"
         src="../images/clustalw_title.png"
         alt="Clustal logo" />
-      <h1>ISDL</h1>
+      <h1>I S D L</h1>
       <!--</div>
            <div class="clear"></div>
            <div >-->
@@ -74,7 +74,7 @@
 
     <ul id="menu">
       <!--<li><a class="current" href="#" title="Home">Home</a></li>-->
-      <li><a href="/">Home</a></li>
+      <li><a href="/species_tree/home_page/">Home</a></li>
       <li><a href="#Webservers">Webservers</a></li>
       <li><a href="#Download">Download</a></li>
       <li><a href="#Documentation">Documentation</a></li>
@@ -107,22 +107,18 @@
     <div class="third">
       <h1><a name="Webservers">Webservers</a></h1>
       <p>
-        You don't necessarily have to go through the hassle to install Clustal on
-        your computer. Instead, you can run Clustal online on several
-        servers on the web:
+        You don't necessarily have to go through the hassle to install ISDL on
+        your computer. Instead, you can run ISDL online on servers on the web,
+        input multisequence file and information at below:
       </p>
-      <ul>
-        <li>
-          <a href="http://www.ebi.ac.uk/Tools/clustalw2/index.html">
-            EBI web server
-          </a>
-        </li>
-        <li>
-          <a href="http://www.ch.embnet.org/software/ClustalW.html">
-            Swiss Institute of Bioinformatics
-          </a>
-        </li>
-      </ul>
+
+      <form action="/save_post/" method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <p>your name: {{ userinfo.user }} <span>{{ errors.user }}</span></p> <br>
+        <p>your email: {{ userinfo.email }} <span>{{ errors.email }}</span></p> <br>
+        <p>choose file: {{ userinfo.inputfile }} <span>{{ errors.inputfile }}</span></p> <br>
+        <input type="submit" value="submit">
+      </form>
     </div>
 
     <!--<div class="clear"></div>-->
