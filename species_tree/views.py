@@ -3,7 +3,7 @@ from .models import Records
 from django.http import HttpResponse,HttpResponseRedirect
 #from django.template import loader
 from datetime import datetime
-from .tasks import generate_tree
+from .tasks import generate_tree,modifytree
 from django import forms
 
 class UserInfo(forms.Form):
@@ -31,7 +31,8 @@ def save_post(request):
                                             submit_date=datetime.now(), email=email)
             infile_path = record.inputfile.path
             file_name = record.inputfile.name.split('.')[0]
-            generate_tree.delay(file_name,infile_path,email)
+            generate_tree.delay(file_name,infile_path)
+            modifytree.delay(file_name,infile_path,email,user_name)
             return HttpResponse(success_str)
         else :
             error_msg = user_input.errors

@@ -1,7 +1,8 @@
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.conf import settings
 import os,sys
 from Bio.Align.Applications import ClustalwCommandline
 from Bio.Phylo.Applications import PhymlCommandline
@@ -72,12 +73,12 @@ def parse_tree(file_name_with_path, distance_dataframe):
         li_0.append(max(li_1))
     return li_0
 
-def plot(results):
+def plot(results,infile_path):
     # 概率分布直方图
     x = results
     n, bins, patches = plt.hist(x, bins=40, normed=1, histtype='bar', facecolor='green', alpha=0.75)
     plt.title(r'frequency distribution histogram of distance')
-    plt.show()
+    plt.savefig(infile_path+'.png',format='png')
     return 0
 
 def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
@@ -97,11 +98,11 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
             li_1.append(sum(li_2) / len(li_2))
         if max(li_1) < min_number:
             newtree.collapse(clade)
-    Phylo.write(newtree, file_name + '_modify_tree.nwk', 'newick')
+    Phylo.write(newtree, file_name_with_path + '_modified_tree.nwk', 'newick')
     return 0
 
 @shared_task
-def generate_tree(file_name,infile_path,email):
+def generate_tree(file_name,infile_path):
     juge_os_and_set_PATH()
     file_name_with_path = infile_path.split('.')[0]
     cline = ClustalwCommandline("clustalw2", infile=infile_path,
@@ -113,14 +114,27 @@ def generate_tree(file_name,infile_path,email):
     clustal2phy(file_name_with_path)
     construc_tree(file_name_with_path, file_name)
 
+    return 0
+
+@shared_task
+def modifytree(file_name,infile_path,send_email,user_name):
+    file_name_with_path = infile_path.split('.')[0]
     distance_dataframe = compute_pairwise_distance(file_name_with_path)
     results = parse_tree(file_name_with_path, distance_dataframe)
-    plot(results)
+    plot(results, infile_path)
 
     modify_tree(file_name_with_path, file_name, distance_dataframe, 0.025)
 
-    #send email
-    send_mail()
+    # send email
+    from_email = settings.DEFAULT_FROM_EMAIL
+    email = EmailMessage(
+        subject='Hello,' + user_name + ':',
+        body='Thank you use the ISDL web service,we send this email with results for you',
+        from_email=from_email,
+        to=[send_email]
+    )
 
-
+    email.attach_file('' + file_name + '_modified_tree.nwk')
+    email.attach_file('' + file_name + '.png')
+    email.send()
     return 0
