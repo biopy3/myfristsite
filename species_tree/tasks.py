@@ -8,8 +8,6 @@ from Bio.Align.Applications import ClustalwCommandline
 from Bio.Phylo.Applications import PhymlCommandline
 from Bio import Phylo
 import itertools
-from rpy2.robjects import pandas2ri
-from rpy2.robjects.packages import importr
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -17,8 +15,8 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from Bio import AlignIO
 import copy
-ape = importr('ape')
-base = importr('base')
+import pyRserve
+
 
 
 def juge_os_and_set_PATH():
@@ -42,22 +40,35 @@ def parse_alignment(file_name_with_path):
                                    dtype=np.character)
     return align_dataframe
 
-def compute_pairwise_distance(file_name_with_path, model='K80'):
-    r_alignments_data = ape.read_dna(file_name_with_path + '.aln', format="clustal")
-    '''
-    model   a character string specifying the evolutionary model to be used;
-            must be one of "raw", "N", "TS", "TV", "JC69", "K80" (the default),
-            "F81", "K81", "F84", "BH87", "T92", "TN93", "GG95", "logdet", "paralin", "indel", or "indelblock".
-    '''
+def compute_pairwise_distance(conn,file_name_with_path, model='K80'):
+    conn.r.file = file_name_with_path + '.aln'
 
-    distance = ape.dist_dna_(r_alignments_data, model=model, as_matrix=True)
-    index = list(pandas2ri.ri2py(distance.rownames))
-    distance_numpy = pandas2ri.ri2py(distance)
-    distance_dataframe = pd.DataFrame(distance_numpy, index=index, columns=index)
+#        model   a character string specifying the evolutionary model to be used;
+ #               must be one of "raw", "N", "TS", "TV", "JC69", "K80" (the default),
+  #              "F81", "K81", "F84", "BH87", "T92", "TN93", "GG95", "logdet", "paralin", "indel", or "indelblock".
+    conn.r.model = model
+    r_script = '''
+        library('ape')
+        compute_distance <- function(file,model)
+        {
+            alignment_data <- read.dna(file=file,format='clustal')
+            index <- attr(alignment_data,"dimnames")[[1]]
+            distance_data <- dist.dna(alignment_data,model=model,as.matrix=TRUE)
+            result <- list(a = distance_data,b = index)
+            return(result)
+        }
+        result <- compute_distance(file,model)
+        distance_data <- result$a
+        index <- result$b
+        '''
+    conn.eval(r_script)
+    distance_dataframe = pd.DataFrame(conn.r.distance_data,
+                                      index=list(conn.r.index), columns=list(conn.r.index))
+
     return distance_dataframe
 
 def parse_tree(file_name_with_path, distance_dataframe):
-    tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
+    tree = Phylo.read(file_name_with_path + "_phy_phyml_tree.txt", "newick")
     li_0 = []
     for clade in tree.get_nonterminals():
         li = list(itertools.combinations(clade, 2))
@@ -73,16 +84,17 @@ def parse_tree(file_name_with_path, distance_dataframe):
         li_0.append(max(li_1))
     return li_0
 
-def plot(results,infile_path):
+def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
-    n, bins, patches = plt.hist(x, bins=40, normed=1, histtype='bar', facecolor='green', alpha=0.75)
+
+    plt.hist(x, bins=40, normed=1, histtype='bar', facecolor='green', alpha=0.75)
     plt.title(r'frequency distribution histogram of distance')
-    plt.savefig(infile_path+'.png',format='png')
+    plt.savefig(file_name_with_path+'.png',format='png')
     return 0
 
 def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
-    tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
+    tree = Phylo.read(file_name_with_path + "_phy_phyml_tree.txt", "newick")
     newtree = copy.deepcopy(tree)
     clades = newtree.get_nonterminals()
     for clade in clades[1:]:
@@ -118,11 +130,17 @@ def generate_tree(file_name,infile_path):
 
 @shared_task
 def modifytree(file_name,infile_path,send_email,user_name):
-    file_name_with_path = infile_path.split('.')[0]
-    distance_dataframe = compute_pairwise_distance(file_name_with_path)
-    results = parse_tree(file_name_with_path, distance_dataframe)
-    plot(results, infile_path)
 
+    conn = pyRserve.connect(host='localhost', port=6311)
+    file_name_with_path = infile_path.split('.')[0]
+
+    distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,'k80')
+
+    results = parse_tree(file_name_with_path, distance_dataframe)
+
+    plot(results, file_name_with_path)
+
+    
     modify_tree(file_name_with_path, file_name, distance_dataframe, 0.025)
 
     # send email
@@ -135,6 +153,10 @@ def modifytree(file_name,infile_path,send_email,user_name):
     )
 
     email.attach_file('' + file_name + '_modified_tree.nwk')
-    email.attach_file('' + file_name + '.png')
+    #email.attach_file('' + file_name + '.png')
     email.send()
+
+    conn.close()
+
     return 0
+
