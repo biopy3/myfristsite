@@ -91,11 +91,7 @@ WSGI_APPLICATION = 'myfristsite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'species_tree',
-        'USER':'root',
-        'PASSWORD':'wr771137363',
-        'HOST':'127.0.0.1',
-        'PORT':'3306',
+        'NAME': os.path.join(BASE_DIR,'db.sqlite3')
     }
 }
 
