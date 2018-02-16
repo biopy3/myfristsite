@@ -10,8 +10,6 @@ from Bio import Phylo
 import itertools
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from Bio import AlignIO
 import copy
