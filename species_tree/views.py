@@ -31,7 +31,7 @@ def save_post(request):
                                             submit_date=datetime.now(), email=email)
             infile_path = record.inputfile.path
             file_name = record.inputfile.name.split('.')[0]
-            #generate_tree.delay(file_name,infile_path)
+            generate_tree.delay(file_name,infile_path)
             modifytree.delay(file_name,infile_path,email,user_name)
             return HttpResponse(success_str)
         else :
