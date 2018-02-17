@@ -30,7 +30,7 @@ def clustal2phy(file_name_with_path):
     return 0
 
 def construc_tree(file_name_with_path, file_name):
-    phyml = PhymlCommandline(input=file_name_with_path + '.phy')
+    phyml = PhymlCommandline(input=file_name_with_path)
     phyml()
     return 0
 
@@ -68,7 +68,7 @@ def compute_pairwise_distance(conn,file_name_with_path, model='K80'):
     return distance_dataframe
 
 def parse_tree(file_name_with_path, distance_dataframe):
-    tree = Phylo.read(file_name_with_path + "_phy_phyml_tree.txt", "newick")
+    tree = Phylo.read(file_name_with_path + "_phyml_tree.txt", "newick")
     li_0 = []
     for clade in tree.get_nonterminals():
         li = list(itertools.combinations(clade, 2))
@@ -97,7 +97,7 @@ def plot(results,file_name_with_path):
     return (bins[i]+bins[i+1])/2
 
 def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
-    tree = Phylo.read(file_name_with_path + "_phy_phyml_tree.txt", "newick")
+    tree = Phylo.read(file_name_with_path + "_phyml_tree.txt", "newick")
     newtree = copy.deepcopy(tree)
     clades = newtree.get_nonterminals()
     for clade in clades[1:]:
