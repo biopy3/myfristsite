@@ -1,21 +1,31 @@
 from django.shortcuts import render,render_to_response
 from .models import Records
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect,FileResponse
 #from django.template import loader
 from datetime import datetime
 from .tasks import generate_tree,modifytree
 from django import forms
+import os
 
 class UserInfo(forms.Form):
-    user = forms.CharField(error_messages={'required':u'user cannot be empty '})
-    email = forms.EmailField(error_messages={'required':u'please full in correct email'})
-    inputfile = forms.FileField(error_messages={'required':u'please full in correct file'})
+    user = forms.CharField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
+                           max_length=16,min_length=3,error_messages={'required':u'user cannot be empty '})
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'special','size': '25'}),
+                             error_messages={'required':u'please full in correct email'})
+    inputfile = forms.FileField(widget=forms.FileInput(attrs={'style':'color:red'}),
+                                error_messages={'required':u'please full in correct file'})
 
 userinfo = UserInfo()
 
+def document(request):
+    cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    the_file_name = 'manual.pdf'  # 显示在弹出对话框中的默认的下载文件名
+    fname = '/species_tree/static/document/Program_of_identificate_species_dividing_line_manual.pdf'
+    response = FileResponse(open(cwd +fname,'rb'))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+    return response
 
-def display(request):
-    return render(request,"display.html")
 def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo})
 

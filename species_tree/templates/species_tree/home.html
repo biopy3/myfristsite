@@ -58,10 +58,6 @@
         <img style="float:left;" id="toplogo" height="150" width="150"
         src="{% static 'image/icon_tree.png' %}"
         alt="ISDL logo" />
-      </a>
-        <img style="float:right;"
-        src="../images/clustalw_title.png"
-        alt="Clustal logo" />
       <h1>I S D L</h1>
       <!--</div>
            <div class="clear"></div>
@@ -74,34 +70,16 @@
 
     <ul id="menu">
       <!--<li><a class="current" href="#" title="Home">Home</a></li>-->
-      <li><a href="/species_tree/home_page/">Home</a></li>
+      <li><a href="/home/">Home</a></li>
       <li><a href="#Webservers">Webservers</a></li>
-      <li><a href="#Download">Download</a></li>
+      <!--<li><a href="#Download">Download</a></li>-->
       <li><a href="#Documentation">Documentation</a></li>
-      <li><a href="#Contact">Contact</a></li>
-      <li><a href="#News">News</a></li>
+      <!--<li><a href="#Contact">Contact</a></li>-->
+      <!--<li><a href="#News">News</a></li>-->
       <!--<li><a href="#Contact">Contact</a></li>-->
       <!--<li><a href="#Acknowledgements">Acknowledgements</a></li>-->
     </ul>
 
-    <!-- template
-         <div class="clear"></div>
-         <h1><a name="FIXME">FIXME:title</a></h1>
-         <div class="FIXME:full:half:third">
-         </div>
-         -->
-
-    <!--
-    <div class="clear"></div>
-    <h1>TODO</h1>
-    <div class="half">
-      <ul>
-      	<li>Mention peadar and bioinformatics support facility of the conway</li>
-        <li>Add Address</li>
-        <li>History</li>
-      </ul>
-    </div>
-   -->
 
     <div class="clear"></div>
     <div class="third">
@@ -112,394 +90,25 @@
         input multisequence file and information at below:
       </p>
 
-      <form action="/save_post/" method="post" enctype="multipart/form-data" >
+      <form action="save_post/" method="post" enctype="multipart/form-data" >
         {% csrf_token %}
-        <p>your name: {{ userinfo.user }} <span>{{ errors.user }}</span></p> <br>
-        <p>your email: {{ userinfo.email }} <span>{{ errors.email }}</span></p> <br>
-        <p>choose file: {{ userinfo.inputfile }} <span>{{ errors.inputfile }}</span></p> <br>
-        <input type="submit" value="submit">
+        <p>your name: {{ userinfo.user }} {{ errors.user }}</p>
+        <p>your email: {{ userinfo.email }} {{ errors.email }}</p>
+        <p>choose file: {{ userinfo.inputfile }} <span>{{ errors.inputfile }}</span></p>
+        <strong><input type="submit" value="submit"></strong>
       </form>
     </div>
 
-    <!--<div class="clear"></div>-->
     <div class="twothird">
-      <h1><a name="Download">Download Clustal W/X</a></h1>
-      <p>
-        Clustal 2 comes in two flavors: the command-line version
-        Clustal W and the graphical version Clustal X.
-        Precompiled executables for Linux, Mac OS X and Windows (incl.
-	XP and Vista) of the
-        most recent version
-        (currently 2.1) <!-- UPDATE -->
-        along with the source code are
-        <a href="../download/current">available for download here</a>.
-        You can also <a href="../download/">browse for
-          older versions</a> (Clustal W 1.81, Clustal V etc).
-        <br />
-        The current version of Clustal 2 is also mirrored on the
-        <a href="ftp://ftp.ebi.ac.uk/pub/software/clustalw2/">
-          EBI ftp site
-        </a>.
-        <!--<br />
-             Old versions were downloaded from
-             <a href="ftp://ftp-igbmc.u-strasbg.fr/pub">IGBC
-               Strasbourg</a>
-             -->
-      </p>
-      <p>
-Clustal 2.1 is released under the <a href="http://www.gnu.org/licenses/lgpl.html">GNU Lesser GPL</a>.
-<!--        Clustal is copyrighted.  Please have a look at the
-        <a href="../download/LICENSE">license</a>
-        file. -->
-      </p>
-      <!--
-      <ul>
-        <li>Link to local stuff</li>
-        <li>alpha</li>
-        <li>current</li>
-        <li>next planned release</li>
-        <li>old</li>
-        <li>Changelog</li>
-        <li>README</li>
-        <li>HOWTO</li>
-        <li>LICENSE</li>
-      </ul>
-           -->
-    </div>
-
-    <div class="clear"></div>
-
-    <div class="full">
       <h1><a name="Documentation">Documentation</a></h1>
-      <h2>Help</h2>
       <p>
-        Please have a look at Clustal X's builtin help menu or if you
-        are using Clustal W use
-        <code>clustalw[2] -help or /help</code>
-        (depending on your platform and version of Clustal).
-        Online versions (which might be out of date)  can be found here:
-        <a href="../download/clustalw_help.txt">Clustal W</a>
-        and
-        <a href="../download/clustalx_help.html">Clustal X</a>.
-        There are a couple of references on how to use
-        Clustal W/X on the net. A very nice tutorial which also covers
-        advanced features like using secondary structures for profile
-        alignment is
-        <a href="http://www.csc.fi/english/research/sciences/bioscience/programs/clustalw/clustalx_pdf">
-          "Using Clustal X for multiple sequence"
-        </a> by Jarno Tuimala
-        <a href="./doc/jarno_tuimala_clustalx.pdf">(local mirror)</a>.
-      </p>
-
-      <!--
-      <li>
-      "2Can Support Portal - Nucleotide Analysis" (EBI)
-      http://www.ebi.ac.uk/2can/tutorials/nucleotide/clustalw.html
-      </li>
-      <li>
-      "2Can Support Portal - Protein and Proteomic Analysis" (EBI)
-      http://www.ebi.ac.uk/2can/tutorials/protein/clustalw.html
-      </li>
--->
-
-
-      <!--
-           <h2>Citing Clustal</h2>
-           <p>If you use Clustal, please cite the most recent reference (see below).</p>
-           -->
-      <h2>References</h2>
-      <ul style="">
-        <li style="font-weight: bold;">
-          Larkin MA, Blackshields G, Brown NP, Chenna R, McGettigan
-          PA, McWilliam H, Valentin F, Wallace IM, Wilm A, Lopez R,
-          Thompson JD, Gibson TJ, Higgins DG.
-          <br />(2007).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/17846036">
-            Clustal W and Clustal X version 2.0.
-          </a>
-          <i>Bioinformatics</i>,
-          23, 2947-2948.
-        </li>
-        <li>
-          Chenna R, Sugawara H, Koike T, Lopez R, Gibson TJ, Higgins DG,
-          Thompson JD.
-          <br />(2003).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/12824352">
-            Multiple sequence alignment with the Clustal series of
-            programs.
-          </a>
-          <i>Nucleic Acids Res.</i>,
-          31, 3497-3500.
-        </li>
-        <li>
-          Jeanmougin F, Thompson JD, Gouy M, Higgins DG, Gibson TJ.
-          <br />(1998).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/9810230">
-            Multiple sequence alignment with Clustal X.
-          </a>
-          <i>Trends Biochem Sci.</i>,
-          23, 403-405.
-        </li>
-        <li>
-          Thompson JD, Gibson TJ, Plewniak F, Jeanmougin F, Higgins
-          DG.
-          <br />(1997).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/9396791">
-            The CLUSTAL_X windows interface: flexible
-            strategies for multiple sequence alignment aided by
-            quality analysis tools.
-          </a>
-          <i>Nucleic Acids Res.</i>,
-          25, 4876-4882.
-        </li>
-        <li>
-          Higgins DG, Thompson JD, Gibson TJ.
-          <br />(1996).
-          <a href ="http://www.ncbi.nlm.nih.gov/pubmed/8743695">
-            Using CLUSTAL for multiple sequence alignments.
-          </a>
-          <i>Methods Enzymol.</i>,
-          266, 383-402.
-        </li>
-        <li style="font-weight: bold;">
-          Thompson JD, Higgins DG, Gibson TJ.
-          <br />(1994).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/7984417">
-            CLUSTAL W: improving the sensitivity of
-            progressive multiple sequence alignment through sequence
-            weighting, position-specific gap penalties and weight matrix
-            choice.
-          </a>
-          <i>Nucleic Acids Res.</i>,
-          22, 4673-4680.
-        </li>
-        <li>
-          Higgins DG.
-          <br />(1994).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/8004173">
-          CLUSTAL V: multiple alignment of DNA and protein sequences.
-          </a>
-          <i>Methods Mol Biol.</i>,
-          25, 307-318
-        </li>
-        <li>
-          Higgins DG, Bleasby AJ, Fuchs R.
-          <br />(1992).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/1591615">
-          CLUSTAL V: improved software for multiple
-          sequence alignment.
-          </a>
-          <i>Comput. Appl. Biosci.</i>,
-          8, 189-191.
-        </li>
-        <li>
-          Higgins,DG and Sharp,PM
-          <br />(1989).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/2720464">
-            Fast and sensitive multiple sequence
-            alignments on a microcomputer.
-          </a>
-          <i>Comput. Appl. Biosci.</i>,
-          5, 151-153.
-        </li>
-        <li>
-          Higgins,D.G. and Sharp,P.M.
-          <br />(1988).
-          <a href="http://www.ncbi.nlm.nih.gov/pubmed/3243435">
-          CLUSTAL: a package for performing
-          multiple sequence alignment on a microcomputer.
-          </a>
-          <i>Gene</i>,
-          73, 237-244.
-        </li>
-      </ul>
-
-    </div>
-
-
-    <div class="clear"></div>
-    <div class="twothird">
-      <h1><a name="Contact">Contact / Bugs</a></h1>
-      <noscript>
-        <p style="color:red;">ups...you need javascript to uncloak the email</p>
-      </noscript>
-      <p>
-        Clustal is currently maintained at the Conway Institute UCD Dublin by
-	Des Higgins, Fabian Sievers, David Dineen, and Andreas Wilm.  You can reach us at
-        <script type="text/javascript">
-          <!--
-               emailaddress_clustalw();
-               //-->
-        </script>
-      </p>
-      <p>
-      If you want to report a bug please make sure, that you are using
-      the most recent version of Clustal. Please also check if the bug
-      has already been reported on our
-        <a
-          href="http://bioinf.ucd.ie/bugzilla/buglist.cgi?quicksearch=clustal">Bugzilla
-          webpage</a>
-      </p>
-
-      <h2>Known issues (2.1)</h2>
-      <dl>
-        <dt><b>Guide tree creation</b></dt>
-        <dd>
-          Hitting return when creating the guide tree cancels the alignment.
-        </dd>
-        <dt><b>UPGMA guide trees</b></dt>
-        <dd>
-          Under some pathological cases, it is possible to create UPGMA guide trees with non-equidistant tips.
-        </dd>
-        <dt><b>Postscript output</b></dt>
-        <dd>
-          If a Postscript output file contains many sequences, Clustal will shrink the font size
-          in an attempt to fit them all on one page. This may cause the sequences to be unreadable.
-          One workaround is to increase the paper size.
-        </dd>
-        <dt><b>Clustal cannot read files saved on WinXp Desktop (Japanse/Chinese environment)</b></dt>
-        <dd>
-          If this happens copy the files to another location and try to open it again.
-        </dd>
-      </dl>
-    </div>
-
-    <!--<div class="clear"></div>-->
-    <div class="third">
-      <h1><a name="Acknowledgements">Acknowledgements</a></h1>
-      <p>
-        We would like to thank all Clustal users who have send in
-	feedback, bug reports and feature requests.  Thanks to all
-	people who helped testing and packaging Clustal, in particular
-	Charles Plessy, Richard Christen, Blake Mertz, Ian Jeffery...
-      </p>
-
-      <!--
-      <div style="float:left; clear:both; padding: 0px 25px;">
-        <img src="./images/ucd_brandmark_colour_small_33p.jpg" alt="Conway Institute Bioinformatics Support" />
-      </div>
-      <p style="padding-top:10px;">
-        This webserver is hosted by the
-        <a href="http://actin.ucd.ie/">
-          Conway Institute Bioinformatics Support.
-        </a>
-      </p>
-      <br />-->
-      <div style="float:left; clear:both">
-        <a href="http://www.sfi.ie/">
-          <img src="../images/sfi_pos2_b_50p.jpg" alt="SFI logo" />
-        </a>
-      </div>
-      <p style="padding-top:10px;">
-        Recent work on Clustal was mainly funded by
-        <a href="http://www.sfi.ie/">Science Foundation Ireland</a>
-      </p>
-
-    </div>
-
-
-
-
-
-    <div class="clear"></div>
-    <div class="news">
-      <h3><a name="News">News:</a></h3> <!-- UPDATE -->
-       <p>2010-11-17
-        &nbsp;&middot;&nbsp;
-        Version 2.1 released.
-        See <a href="../download/2.1/CHANGELOG">CHANGELOG</a>
-      </p>
-       <p>2009-09-23
-        &nbsp;&middot;&nbsp;
-        Version 2.0.12 released.
-        See <a href="../download/2.0.12/CHANGELOG">CHANGELOG</a>
-      </p>
-       <p>2009-04-16
-        &nbsp;&middot;&nbsp;
-        Version 2.0.11 released.
-        See <a href="../download/2.0.11/CHANGELOG">CHANGELOG</a>
-       </p>
-       <p>2008-10-14
-        &nbsp;&middot;&nbsp;
-        Version 2.0.10 released.
-        See <a href="../download/2.0.10/CHANGELOG">CHANGELOG</a>
-      </p>
-       <p>2008-06-23
-        &nbsp;&middot;&nbsp;
-        Version 2.0.9 released.
-        See <a href="../download/2.0.9/CHANGELOG">CHANGELOG</a>
-      </p>
-       <p>2008-06-03
-        &nbsp;&middot;&nbsp;
-        Version 2.0.8 released.
-        See <a href="../download/2.0.8/CHANGELOG">CHANGELOG</a>
-      </p>
-      <p>2008-05-13
-        &nbsp;&middot;&nbsp;
-        Version 2.0.7 released.
-        See <a href="../download/2.0.7/CHANGELOG">CHANGELOG</a>
-      </p>
-      <p>2008-04-24
-        &nbsp;&middot;&nbsp;
-        Version 2.0.6 released.
-        See <a href="../download/2.0.6/CHANGELOG">CHANGELOG</a>
-        <!-- This
-             version uses the slash as default command separator on MacOS X
-             instead of previously used hyphen. -->
-      </p>
-      <p>2008-03-14
-        &nbsp;&middot;&nbsp;
-        Version 2.0.5 released.
-        See <a href="../download/2.0.5/CHANGELOG">CHANGELOG</a>
-        <!-- This
-             version uses the slash as default command separator on MacOS X
-             instead of previously used hyphen. -->
-      </p>
-      <p>2008-03-06
-        &nbsp;&middot;&nbsp;
-        Server will be down from 2008-03-07 to 2008-03-08.
-      </p>
-      <p>2008-03-05
-        &nbsp;&middot;&nbsp;
-        Version 2.0.4 released. See <a href="../download/2.0.4/CHANGELOG">CHANGELOG</a>
-      </p>
-      <p>2008-02-29
-        &nbsp;&middot;&nbsp;
-        Uploaded webpage.
+        <a href="http://45.76.122.117:8000/document/manual.pdf">Click here </a>
+        download the manual about the programs?we thanks a lot you view the website
+        and choice the servers.
       </p>
     </div>
 
 
-
-    <div class="clear"></div>
-    <div id="footer">
-      <p>
-        <a href="http://validator.w3.org/check?uri=referer">
-          Valid XHTML
-        </a>
-        and
-        <a href="http://jigsaw.w3.org/css-validator/check?uri=referer">
-          Valid CSS
-        </a>
-        &nbsp;|&nbsp;
-        <a href="http://www.anybrowser.org/campaign/">
-          Viewable With Any Browser
-        </a>
-        &nbsp;|&nbsp;
-        <!-- &copy; Copyright YourSite &middot; -->
-        <!-- Design inspired by theme "Internet Management"
-             from http://www.solucija.com -->
-        <!-- <a href="http://www.solucija.com/">
-          Design adopted from solucija.com
-          </a>
-             &nbsp;|&nbsp;-->
-        <script type="text/javascript">
-          <!--
-               last_modified();
-               //-->
-        </script>
-      </p>
-    </div>
   </div>
   <!-- google analytics -->
   <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">

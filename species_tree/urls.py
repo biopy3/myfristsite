@@ -2,8 +2,8 @@ from django.urls import path,re_path
 from . import views
 
 urlpatterns = [
-    path('display/',views.display),
-    path('home_page/', views.home_page),
-    path('',views.save_post),
+    path('manual.pdf',views.document),
+    path('', views.home_page),
+    path('save_post/',views.save_post),
 
 ]

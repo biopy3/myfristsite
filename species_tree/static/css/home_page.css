@@ -4,7 +4,7 @@
 */
 
 body { 
-    color: #303030; background: #ebebeb;
+    color: rgb(255,255,255); background: rgb(240,240,240);
     font: 0.85em Arial, Verdana, sans-serif; 
     text-align: center; line-height: 1.5em;
     margin: 2.5em 0; 
@@ -84,7 +84,8 @@ padding: 0; */
 		
 	
 #menu {
-    clear: both; margin: 0 2% 1em 1%;
+    background: rgb(181,181,181);
+    clear: both; margin: 1 2% 1em 1%;
     padding: 7px 0 7px 0; border-bottom: 1px solid #DCDBD5; border-top: 1px solid #DCDBD5;
     font-size: 1.3em;
     font-weight: bold;
@@ -112,20 +113,13 @@ padding: 0; */
 	text-align: center;
 }
 
-.full {
-	margin: 1em 1.1%;
-	width: 95%;
-	background: #fff;
-	color: #303030;
-	padding: .5% 1%;
-}
 
 .twothird {
 	float: left;
-	margin: 1em 1.1%;
+	margin: 1em 1.1% 2  3;
 	width: 62%;
 	background: #fff;
-	color: #303030;
+	color: #303000;
 	padding: .5% 1%;
     /* hack for centering when body's text is centered
      text-align:left;
@@ -148,7 +142,7 @@ padding: 0; */
 	float: left;
 	width: 29%;
 	margin: 1em 1.1%;
-	background: #fff;
+	background: rgb(72,175,31);
 	color: #303030;
 	padding: .5% 1%;
 }

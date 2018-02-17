@@ -88,10 +88,13 @@ def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
 
-    plt.hist(x, bins=40, normed=1, histtype='bar', facecolor='green', alpha=0.75)
+    n,bins,patches = plt.hist(x, bins=len(results), normed=1, histtype='bar', facecolor='green', alpha=0.75)
     plt.title(r'frequency distribution histogram of distance')
     plt.savefig(file_name_with_path+'.png',format='png')
-    return 0
+    for i in range(len(n)):
+        if n[i] == 0:
+            break
+    return (bins[i]+bins[i+1])/2
 
 def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     tree = Phylo.read(file_name_with_path + "_phy_phyml_tree.txt", "newick")
@@ -138,10 +141,9 @@ def modifytree(file_name,infile_path,send_email,user_name):
 
     results = parse_tree(file_name_with_path, distance_dataframe)
 
-    plot(results, file_name_with_path)
-
+    divide_line = plot(results, file_name_with_path)
     
-    modify_tree(file_name_with_path, file_name, distance_dataframe, 0.025)
+    modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
 
     # send email
     from_email = settings.DEFAULT_FROM_EMAIL
