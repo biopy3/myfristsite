@@ -116,23 +116,18 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     Phylo.write(newtree, file_name_with_path + '_modified_tree.nwk', 'newick')
     return 0
 
+
 @shared_task
-def generate_tree(file_name,infile_path):
+def generate_tree(file_name,infile_path,send_email,user_name):
     juge_os_and_set_PATH()
     file_name_with_path = infile_path.split('.')[0]
     cline = ClustalwCommandline("clustalw2", infile=infile_path,
                                 outfile=file_name + ".aln")  # Alignment multisequence
-    # muscle_cline = MuscleCommandline(input=infile_name + ".fasta", out=infile_name + ".aln",
-    #                                 clwstrict=True)  # Alignment multisequence
     cline()
 
     clustal2phy(file_name_with_path)
     construc_tree(file_name_with_path, file_name)
 
-    return 0
-
-@shared_task
-def modifytree(file_name,infile_path,send_email,user_name):
 
     conn = pyRserve.connect(host='localhost', port=6311)
     file_name_with_path = infile_path.split('.')[0]
@@ -155,7 +150,7 @@ def modifytree(file_name,infile_path,send_email,user_name):
     )
 
     email.attach_file('' + file_name + '_modified_tree.nwk')
-    #email.attach_file('' + file_name + '.png')
+    email.attach_file('' + file_name + '.png')
     email.send()
 
     conn.close()
