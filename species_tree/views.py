@@ -3,7 +3,7 @@ from .models import Records
 from django.http import HttpResponse,HttpResponseRedirect,FileResponse
 #from django.template import loader
 from datetime import datetime
-from .tasks import generate_tree,modifytree
+from .tasks import generate_tree
 from django import forms
 import os
 
