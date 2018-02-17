@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
+    path('document/',include('species_tree.urls')),
     path('save_post/',include('species_tree.urls')),
     path('admin/', admin.site.urls),
-    path('species_tree/',include('species_tree.urls')),
+    path('home/',include('species_tree.urls')),
 ]
