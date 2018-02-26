@@ -114,7 +114,7 @@ padding: 0; */
 }
 
 
-.twothird {
+.document {
 	float: left;
 	margin: 1em 1.1% 2  3;
 	width: 62%;
@@ -174,13 +174,10 @@ padding: 0; */
 	margin: 1em 1.1%;
 	padding: .5% 1%;
 }
-/* to center:
-	width: 66%;
-    clear: both;
-	width: 66%;
-	margin: auto;
-*/
 
+.manual {width:62%;
+    
+}
 #footer { 
     margin: 2em 3%; text-align: right; 
 }
