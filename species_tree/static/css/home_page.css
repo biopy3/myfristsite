@@ -138,7 +138,7 @@ padding: 0; */
 	padding: .5% 1%;
 }
 
-.third {
+.manual {
 	float: left;
 	width: 29%;
 	margin: 1em 1.1%;
@@ -164,11 +164,11 @@ padding: 0; */
 */	
 
 
-.date {
+.cite {
     border-top: 1px dotted #ccc; padding: 5px 0;
 }
 			
-.news {
+.version {
     background: #fff; color: #808080; padding: .7em 1em; margin: 0 1%;  
     line-height: 1em;
 	margin: 1em 1.1%;

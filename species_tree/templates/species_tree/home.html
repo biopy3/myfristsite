@@ -27,6 +27,7 @@
               var i; var j; var Foo = new Array();
               var gg = 95;
               var xo = 224;
+
               Foo[0]="7b209f273124257c612c20";
               Foo[1]="292c342f7a232c35333421";
               Foo[2]="2d38413624256f2a26637f";
@@ -58,12 +59,12 @@
         <img style="float:left;" id="toplogo" height="150" width="150"
         src="{% static 'image/icon_tree.png' %}"
         alt="ISDL logo" />
-      <h1>I S D L</h1>
+      <h1>Welcome to the SCIC server</h1>
       <!--</div>
            <div class="clear"></div>
            <div >-->
       <p>
-        Identificate Species Dividing Line of nucleic acid sequences
+        Detecting species boundaries using Sister Clade Progressive Claculation
       </p>
     </div>
 
@@ -85,9 +86,9 @@
     <div class="third">
       <h1><a name="Webservers">Webservers</a></h1>
       <p>
-        You don't necessarily have to go through the hassle to install ISDL on
-        your computer. Instead, you can run ISDL online on servers on the web,
-        input multisequence file and information at below:
+        You don't necessarily have to go through the hassle to install SCPC on
+        your computer.To use the SCPC webserver,simply upload your aligned sequences in
+        FASTA format and input your information below:
       </p>
 
       <form action="save_post/" method="post" enctype="multipart/form-data" >
@@ -102,12 +103,30 @@
     <div class="twothird">
       <h1><a name="Documentation">Documentation</a></h1>
       <p>
-        <a href="http://45.76.122.117:8000/document/manual.pdf">Click here </a>
-        download the manual about the programs?we thanks a lot you view the website
-        and choice the servers.
-      </p>
+         In order to avoid possible errors of species delimitation and identification imposed by the artificial classification of morphology, we rejected the species status of all our samples and treated them all as completely identical individuals. The computing process was named as Sister Clade Progressive Calculation (SCPC), which implemented as follows: The genetic distances between the sister individuals or assemble were calculated in turn, from the top of the trees to the root. We hypothesize that genetic variation within a species is much smaller than that between species and thus a genetic gap exists. The pairwise distances were counted and their frequency distribution histograms were created. The first gap is the regarded as molecular threshold between species. 
+      </p>        
     </div>
 
+    <div class="version">
+        Current version: SCPC 0.8.1(beta version)
+    </div>
+
+    <div class="manual">
+        <a href="http://45.76.122.117:8000/document/manual.pdf">Click here </a>
+        to download the manual about the program.
+    </div>
+
+    <div class="cite">
+        <p>
+            This program was conceived by Dr. Wei Zhang and developed by Rui Wang in Shandong University, Weihai. If you have any suggestion and question, please contact WZhang@sdu.edu.cn. If you find this software useful for your research, please cite the following work:
+        </p>
+        <p>
+        1.XXX
+        </p>
+        <p>
+        2.XXX
+        </p>
+    </div>
 
   </div>
   <!-- google analytics -->
