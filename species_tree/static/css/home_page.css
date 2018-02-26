@@ -165,19 +165,18 @@ padding: 0; */
 
 
 .cite {
+    float:left;
     border-top: 1px dotted #ccc; padding: 5px 0;
 }
 			
 .version {
+    float:left;
     background: #fff; color: #808080; padding: .7em 1em; margin: 0 1%;  
     line-height: 1em;
 	margin: 1em 1.1%;
 	padding: .5% 1%;
 }
 
-.manual {width:62%;
-    
-}
 #footer { 
     margin: 2em 3%; text-align: right; 
 }
