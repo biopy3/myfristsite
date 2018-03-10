@@ -166,7 +166,12 @@ padding: 0; */
 
 .cite {
     float:left;
-    border-top: 1px dotted #ccc; padding: 5px 0;
+    border-top: 1px dotted #ccc; padding: 5px 0;float: left;
+	  margin: 1em 1.1% 2  3;
+	  width: 62%;
+	  background: #fff;
+	  color: #303000;
+	  padding: .5% 1%;
 }
 			
 .version {
