@@ -26,7 +26,20 @@ def juge_os_and_set_PATH():
         os.environ['PATH'] = os.environ['PATH'] + ';' + os.getcwd() + '/species_tree/sowftwares'
 
 def clustal2phy(file_name_with_path):
+    align = AlignIO.read(file_name_with_path + ".aln","clustal")
+    for record in align:
+        if len(record.id) > 10:
+            id_list = record.id.split("_")
+            id = ""
+            for i in range(len(id_list)-1):
+                id = id + id_list[i][0]
+                id = id + id_list[-1]
+            record.id = id
+    AlignIO.write(align,file_name_with_path + ".phy","phylip")
+
+    '''
     AlignIO.convert(file_name_with_path + '.aln', "clustal", file_name_with_path + ".phy", "phylip")
+    '''
     return 0
 
 def construc_tree(file_name_with_path, file_name):
