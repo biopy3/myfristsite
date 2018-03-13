@@ -129,6 +129,18 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     Phylo.write(newtree, file_name_with_path + '_modified_tree.nwk', 'newick')
     return 0
 
+def list_spcies(file_name_with_path):
+    f = open(file_name_with_path + "_spcies_list.txt",'w+',encoding='utf-8')
+    tree  = Phylo.read(file_name_with_path + "_modified_tree.nwk",'newick')
+    clades = tree.get_nonterminals()
+    for clade in clades:
+        if clade.is_perterminal:
+            li = clade.get_terminals()
+            for leaf in li[:-1]:
+                f.write(leaf.name + ',')
+            f.write(li[-1].name + '\n')
+    f.close()
+    return 0
 
 @shared_task
 def generate_tree(file_name,infile_path,send_email,user_name):
@@ -152,6 +164,8 @@ def generate_tree(file_name,infile_path,send_email,user_name):
     divide_line = plot(results, file_name_with_path)
     
     modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
+    
+    list_spcies(file_name_with_path)
 
     # send email
     from_email = settings.DEFAULT_FROM_EMAIL
