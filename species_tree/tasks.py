@@ -101,7 +101,7 @@ def plot(results,file_name_with_path):
     x = results
     bins = math.ceil(max(results)/0.005)
     n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='green', alpha=0.75)
-    plt.title(r'frequency distribution histogram of distance')
+    plt.title(r'Frequency distribution of K2P genetic distances obtained from successive sister-clade pairwise.')
     plt.savefig(file_name_with_path+'.png',format='png')
     for i in range(len(n)):
         if n[i] == 0:
