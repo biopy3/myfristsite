@@ -36,6 +36,7 @@ def clustal2phy(file_name_with_path):
             id = id + id_list[-1]
             record.id = id
     AlignIO.write(align,file_name_with_path + ".phy","phylip")
+    AlignIO.write(align,file_name_with_path + ".aln","clustal")
 
     return 0
 
