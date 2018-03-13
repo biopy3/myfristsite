@@ -130,7 +130,7 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     return 0
 
 def list_spcies(file_name_with_path):
-    f = open(file_name_with_path + "_spcies_list.txt",'w+',encoding='utf-8')
+    f = open(file_name_with_path + "_species_list.csv",'w+',encoding='utf-8')
     tree  = Phylo.read(file_name_with_path + "_modified_tree.nwk",'newick')
     clades = tree.get_nonterminals()
     for clade in clades:
@@ -179,6 +179,7 @@ def generate_tree(file_name,infile_path,send_email,user_name):
     email.attach_file('' + file_name + '_modified_tree.nwk')
     email.attach_file('' + file_name + '.png')
     email.attach_file('' + file_name + '.phy_phyml_tree.txt')
+    email.attach_file('' + file_name + '_species_list.csv')
     email.send()
     conn.close()
 
