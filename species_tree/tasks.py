@@ -29,11 +29,11 @@ def juge_os_and_set_PATH():
 def clustal2phy(file_name_with_path):
     align = AlignIO.read(file_name_with_path + ".aln","clustal")
     for record in align:
-        len = 2
+        length = 2
         if len(record.id) > 10:
             id_list = record.id.split("_")
             id = ""
-            for i in range(len):
+            for i in range(length):
                 id = id + id_list[i][0]
             id = id + id_list[-1]
             record.id = id
