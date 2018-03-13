@@ -77,7 +77,8 @@ def compute_pairwise_distance(conn,file_name_with_path, model='K80'):
     conn.eval(r_script)
     distance_dataframe = pd.DataFrame(conn.r.distance_data,
                                       index=list(conn.r.index), columns=list(conn.r.index))
-    distance_dataframe.to_csv(file_name_with_path + '_distance_matrix.csv')
+    path = file_name_with_path + '_distance_matrix.csv'
+    distance_dataframe.to_csv(path)
     return distance_dataframe
 
 def parse_tree(file_name_with_path, distance_dataframe):
@@ -102,7 +103,7 @@ def plot(results,file_name_with_path):
     x = results
     bins = math.ceil(max(results)/0.005)
     n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='green', alpha=0.75)
-    plt.title(r'Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.')
+    plt.title("Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.")
     plt.savefig(file_name_with_path+'.png',format='png')
     for i in range(len(n)):
         if n[i] == 0:
