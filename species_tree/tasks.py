@@ -77,7 +77,7 @@ def compute_pairwise_distance(conn,file_name_with_path, model='K80'):
     conn.eval(r_script)
     distance_dataframe = pd.DataFrame(conn.r.distance_data,
                                       index=list(conn.r.index), columns=list(conn.r.index))
-
+    distance_dataframe.to_csv(file_name_with_path + '_distance_matrix.csv')
     return distance_dataframe
 
 def parse_tree(file_name_with_path, distance_dataframe):
