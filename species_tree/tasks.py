@@ -134,7 +134,7 @@ def list_spcies(file_name_with_path):
     tree  = Phylo.read(file_name_with_path + "_modified_tree.nwk",'newick')
     clades = tree.get_nonterminals()
     for clade in clades:
-        if clade.is_perterminal:
+        if clade.is_preterminal:
             li = clade.get_terminals()
             for leaf in li[:-1]:
                 f.write(leaf.name + ',')
