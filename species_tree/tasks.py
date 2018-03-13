@@ -155,15 +155,15 @@ def generate_tree(file_name,infile_path,send_email,user_name):
     from_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(
         subject='Hello,' + user_name + ':',
-        body='Thank you use the ISDL web service,we send this email with results for you',
+        body='Thank you use the SCPC web service,we send this email with results for you.',
         from_email=from_email,
         to=[send_email]
     )
 
     email.attach_file('' + file_name + '_modified_tree.nwk')
     email.attach_file('' + file_name + '.png')
+    email.attach_file('' + file_name + '.phy_phyml_tree.txt')
     email.send()
-
     conn.close()
 
     return 0
