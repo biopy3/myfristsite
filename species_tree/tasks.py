@@ -102,7 +102,7 @@ def plot(results,file_name_with_path):
     x = results
     bins = math.ceil(max(results)/0.005)
     n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='green', alpha=0.75)
-    plt.title(r'Frequency distribution of K2P genetic distances obtained from successive sister-clade pairwise.')
+    plt.title(r'Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.')
     plt.savefig(file_name_with_path+'.png',format='png')
     for i in range(len(n)):
         if n[i] == 0:
@@ -180,6 +180,7 @@ def generate_tree(file_name,infile_path,send_email,user_name):
     email.attach_file('' + file_name + '.png')
     email.attach_file('' + file_name + '.phy_phyml_tree.txt')
     email.attach_file('' + file_name + '_species_list.csv')
+    email.attach_file('' + file_name + '_distance_matrix.csv')
     email.send()
     conn.close()
 
