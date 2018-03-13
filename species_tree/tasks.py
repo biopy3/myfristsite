@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from Bio import AlignIO
 import copy
 import pyRserve
+import math
 
 
 
@@ -98,8 +99,8 @@ def parse_tree(file_name_with_path, distance_dataframe):
 def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
-
-    n,bins,patches = plt.hist(x, bins=len(results), normed=1, histtype='bar', facecolor='green', alpha=0.75)
+    bins = math.ceil(results.max()/0.005)
+    n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='green', alpha=0.75)
     plt.title(r'frequency distribution histogram of distance')
     plt.savefig(file_name_with_path+'.png',format='png')
     for i in range(len(n)):
