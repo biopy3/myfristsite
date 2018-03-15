@@ -222,5 +222,5 @@ def generate_tree(infile_path,send_email,user_name):
         email.send()
         conn.close()
 
-        return 0
+    return 0
 
