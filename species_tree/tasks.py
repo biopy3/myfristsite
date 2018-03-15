@@ -14,11 +14,33 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from Bio import AlignIO
-import copy
-import pyRserve
-import math
+import copy,math,pyRserve,time
+import zipfile
 
+def every_file_complete_path(dir_path):
+    li = []
+    for dirpath,dirnames,filenames in os.walk(dir_path):
+        for filename in filenames:
+            postfix = os.path.splitext(filename)[1]
+            if postfix == '.fasta' or postfix == '.fas':
+                li.append(os.path.join(dirpath,filename))
+    return li
 
+def handle_file(file_name_with_path,infile_path,file_name):
+    dir_path = file_name_with_path + '_' + time.strftime('%Y%m%d-%H-%M')
+    postfix = file_name.split('.')[-1]
+    if not os.path.exists(dir_path):
+        os.mkdir(dir_path)
+
+    if postfix == 'zip' :
+        zip_file = zipfile.ZipFile(infile_path)
+        for names in zip_file.namelist():
+            zip_file.extract(names,dir_path)
+
+    if postfix == 'fasta' or postfix == 'fas':
+        os.rename(infile_path,dir_path + '/' + file_name)
+
+    return dir_path
 
 def juge_os_and_set_PATH():
     if os.name == 'posix' and sys.version_info[0] == 3:
@@ -40,7 +62,6 @@ def clustal2phy(file_name_with_path):
             dict[id] = record.id
             record.id = id
     AlignIO.write(align,file_name_with_path + ".phy","phylip")
-    #AlignIO.write(align,file_name_with_path + ".aln","clustal")
 
     return dict
 
@@ -150,48 +171,55 @@ def list_spcies(file_name_with_path):
 
 @shared_task
 def generate_tree(file_name,infile_path,send_email,user_name):
+    file_name_with_path = os.path.splitext(infile_path)[0]
+    dir_path = handle_file(file_name_with_path,infile_path,file_name)
     juge_os_and_set_PATH()
-    file_name_with_path = infile_path.split('.')[0]
-    cline = ClustalwCommandline("clustalw2", infile=infile_path,
+    file_path_list = every_file_complete_path(dir_path)
+    for i in file_path_list:
+        infile_path = i
+        file_name_with_path = os.path.splitext(i)[0]
+        file_name = i.split('/')[-1]
+
+        cline = ClustalwCommandline("clustalw2", infile=infile_path,
                                 outfile=file_name + ".aln")  # Alignment multisequence
-    cline()
+        cline()
 
-    dict = clustal2phy(file_name_with_path)
-    construc_tree(file_name_with_path, file_name,dict)
+        dict = clustal2phy(file_name_with_path)
+        construc_tree(file_name_with_path, file_name,dict)
 
 
-    conn = pyRserve.connect(host='localhost', port=6311)
-    file_name_with_path = infile_path.split('.')[0]
+        conn = pyRserve.connect(host='localhost', port=6311)
+        file_name_with_path = infile_path.split('.')[0]
 
-    distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,'k80')
-    
-    matrix_path = file_name_with_path + '_distance_matrix.csv'
-    distance_dataframe.to_csv(matrix_path)
+        distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,'k80')
 
-    results = parse_tree(file_name_with_path, distance_dataframe)
+        matrix_path = file_name_with_path + '_distance_matrix.csv'
+        distance_dataframe.to_csv(matrix_path)
 
-    divide_line = plot(results, file_name_with_path)
-    
-    modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
-    
-    list_spcies(file_name_with_path)
+        results = parse_tree(file_name_with_path, distance_dataframe)
 
-    # send email
-    from_email = settings.DEFAULT_FROM_EMAIL
-    email = EmailMessage(
-        subject='Hello,' + user_name + ':',
-        body='Thank you use the SCPC web service,we send this email with results for you.',
-        from_email=from_email,
-        to=[send_email]
-    )
+        divide_line = plot(results, file_name_with_path)
 
-    email.attach_file('' + file_name + '_modified_tree.nwk')
-    email.attach_file('' + file_name + '.png')
-    email.attach_file('' + file_name + '.phy_phyml_tree.txt')
-    email.attach_file('' + file_name + '_species_list.csv')
-    email.attach_file('' + file_name + '_distance_matrix.csv')
-    email.send()
-    conn.close()
+        modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
 
-    return 0
+        list_spcies(file_name_with_path)
+
+        # send email
+        from_email = settings.DEFAULT_FROM_EMAIL
+        email = EmailMessage(
+            subject='Hello,' + user_name + ':',
+            body='Thank you use the SCPC web service,we send this email with results for you.',
+            from_email=from_email,
+            to=[send_email]
+        )
+
+        email.attach_file('' + file_name + '_modified_tree.nwk')
+        email.attach_file('' + file_name + '.png')
+        email.attach_file('' + file_name + '.phy_phyml_tree.txt')
+        email.attach_file('' + file_name + '_species_list.csv')
+        email.attach_file('' + file_name + '_distance_matrix.csv')
+        email.send()
+        conn.close()
+
+        return 0
 
