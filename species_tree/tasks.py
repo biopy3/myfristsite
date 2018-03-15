@@ -28,16 +28,16 @@ def every_file_complete_path(dir_path):
 
 def handle_file(file_name_with_path,infile_path,file_name):
     dir_path = file_name_with_path + '_' + time.strftime('%Y%m%d-%H-%M')
-    postfix = file_name.split('.')[-1]
+    postfix = os.path.splitext(infile_path)[-1]
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
 
-    if postfix == 'zip' :
+    if postfix == '.zip' :
         zip_file = zipfile.ZipFile(infile_path)
         for names in zip_file.namelist():
             zip_file.extract(names,dir_path)
 
-    if postfix == 'fasta' or postfix == 'fas':
+    if postfix == '.fasta' or postfix == '.fas':
         os.rename(infile_path,dir_path + '/' + file_name)
 
     return dir_path
