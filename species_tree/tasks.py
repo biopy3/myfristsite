@@ -26,9 +26,10 @@ def every_file_complete_path(dir_path):
                 li.append(os.path.join(dirpath,filename))
     return li
 
-def handle_file(file_name_with_path,infile_path,file_name):
+def handle_file(file_name_with_path,infile_path):
     dir_path = file_name_with_path + '_' + time.strftime('%Y%m%d-%H-%M')
     postfix = os.path.splitext(infile_path)[-1]
+    file_name = infile_path.split('/')[-1]
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
 
@@ -170,15 +171,15 @@ def list_spcies(file_name_with_path):
     return 0
 
 @shared_task
-def generate_tree(file_name,infile_path,send_email,user_name):
+def generate_tree(infile_path,send_email,user_name):
     file_name_with_path = os.path.splitext(infile_path)[0]
-    dir_path = handle_file(file_name_with_path,infile_path,file_name)
+    dir_path = handle_file(file_name_with_path,infile_path)
     juge_os_and_set_PATH()
     file_path_list = every_file_complete_path(dir_path)
     for i in file_path_list:
         infile_path = i
         file_name_with_path = os.path.splitext(i)[0]
-        file_name = i.split('/')[-1]
+        file_name = os.path.splitext(i.split('/')[-1])[0]
 
         cline = ClustalwCommandline("clustalw2", infile=infile_path,
                                 outfile=file_name + ".aln")  # Alignment multisequence
@@ -189,7 +190,6 @@ def generate_tree(file_name,infile_path,send_email,user_name):
 
 
         conn = pyRserve.connect(host='localhost', port=6311)
-        file_name_with_path = infile_path.split('.')[0]
 
         distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,'k80')
 
