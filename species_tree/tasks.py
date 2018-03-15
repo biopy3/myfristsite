@@ -15,7 +15,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from Bio import AlignIO
 import copy,math,pyRserve,time
-import zipfile
+import zipfile,shutil
 
 def every_file_complete_path(dir_path):
     li = []
