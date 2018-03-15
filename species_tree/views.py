@@ -29,6 +29,17 @@ def document(request):
 def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo})
 
+def query(request):
+    Records.objects.get  
+    cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    the_file_name = 'manual.pdf'  # 显示在弹出对话框中的默认的下载文件名
+    fname = '/species_tree/static/document/Program_of_identificate_species_dividing_line_manual.pdf'
+    response = FileResponse(open(cwd +fname,'rb'))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+    return response
+    return
+
 def save_post(request):
     success_str = "Submit successfully,waiting for minites we will send results to your email!"
     if request.method == "POST":
@@ -40,7 +51,7 @@ def save_post(request):
             record = Records.objects.create(user=user_name, inputfile=inputfile,
                                             submit_date=datetime.now(), email=email)
             infile_path = record.inputfile.path
-            generate_tree.delay(infile_path,email,user_name)
+            generate_tree.delay(infile_path,email,user_name,record)
             return HttpResponse(success_str)
         else :
             error_msg = user_input.errors
