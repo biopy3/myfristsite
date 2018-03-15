@@ -28,23 +28,29 @@ def juge_os_and_set_PATH():
 
 def clustal2phy(file_name_with_path):
     align = AlignIO.read(file_name_with_path + ".aln","clustal")
+    length = 2
+    dict = {}
     for record in align:
-        length = 2
         if len(record.id) > 10:
             id_list = record.id.split("_")
             id = ""
             for i in range(length):
                 id = id + id_list[i][0]
-            id = id + id_list[-1]
+            id = id + id_list[-1][-8:]
+            dict[id] = record.id
             record.id = id
     AlignIO.write(align,file_name_with_path + ".phy","phylip")
-    AlignIO.write(align,file_name_with_path + ".aln","clustal")
+    #AlignIO.write(align,file_name_with_path + ".aln","clustal")
 
-    return 0
+    return dict
 
-def construc_tree(file_name_with_path, file_name):
+def construc_tree(file_name_with_path, file_name,dict):
     phyml = PhymlCommandline(input=file_name_with_path + '.phy')
     phyml()
+    tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
+    for leaf in tree.get_terminals():
+        leaf.name = dict[leaf.name]
+    Phylo.write(tree, file_name_with_path + ".phy_phyml_tree.txt", "newick")
     return 0
 
 def parse_alignment(file_name_with_path):
@@ -150,8 +156,8 @@ def generate_tree(file_name,infile_path,send_email,user_name):
                                 outfile=file_name + ".aln")  # Alignment multisequence
     cline()
 
-    clustal2phy(file_name_with_path)
-    construc_tree(file_name_with_path, file_name)
+    dict = clustal2phy(file_name_with_path)
+    construc_tree(file_name_with_path, file_name,dict)
 
 
     conn = pyRserve.connect(host='localhost', port=6311)
