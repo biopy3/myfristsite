@@ -33,7 +33,7 @@ def handle_file(file_name_with_path,infile_path):
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
 
-    if postfix == '.zip' :
+    if zipfile.is_zipfile(infile_path):
         zip_file = zipfile.ZipFile(infile_path)
         for names in zip_file.namelist():
             zip_file.extract(names,dir_path)
@@ -204,7 +204,8 @@ def generate_tree(infile_path,send_email,user_name):
         modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
 
         list_spcies(file_name_with_path)
-
+        
+        shutil.make_archive(dir_path,'zip',dir_path)
         # send email
         from_email = settings.DEFAULT_FROM_EMAIL
         email = EmailMessage(
@@ -214,11 +215,7 @@ def generate_tree(infile_path,send_email,user_name):
             to=[send_email]
         )
 
-        email.attach_file('' + file_name + '_modified_tree.nwk')
-        email.attach_file('' + file_name + '.png')
-        email.attach_file('' + file_name + '.phy_phyml_tree.txt')
-        email.attach_file('' + file_name + '_species_list.csv')
-        email.attach_file('' + file_name + '_distance_matrix.csv')
+        email.attach_file('' + dir_path + '.zip')
         email.send()
         conn.close()
 
