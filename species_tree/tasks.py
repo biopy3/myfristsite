@@ -179,7 +179,7 @@ def generate_tree(infile_path,send_email,user_name):
     for i in file_path_list:
         infile_path = i
         file_name_with_path = os.path.splitext(i)[0]
-        file_name = os.path.splitext(i.split('/')[-1])[0]
+        file_name = file_name_with_path.split('/')[-1]
 
         cline = ClustalwCommandline("clustalw2", infile=infile_path,
                                 outfile=file_name + ".aln")  # Alignment multisequence
