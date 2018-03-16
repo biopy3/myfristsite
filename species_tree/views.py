@@ -5,7 +5,7 @@ from django.http import HttpResponse,HttpResponseRedirect,FileResponse
 from datetime import datetime
 from .tasks import generate_tree
 from django import forms
-import os
+import os,string,random
 
 class UserInfo(forms.Form):
     user = forms.CharField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
@@ -14,6 +14,10 @@ class UserInfo(forms.Form):
                              error_messages={'required':u'please full in correct email'})
     inputfile = forms.FileField(widget=forms.FileInput(attrs={'style':'color:red'}),
                                 error_messages={'required':u'please full in correct file'})
+    resultfile = forms.FileField(widget=forms.FileInput(attrs={'style':'color:red'}),
+                                error_messages={'required':u'please full in correct file'})
+    access_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
+                           max_length=15,min_length=15,error_messages={'required':u'Access code cannot be empty '})
 
 userinfo = UserInfo()
 
@@ -29,15 +33,28 @@ def document(request):
 def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo})
 
-def query(request):
-    Records.objects.get  
-    cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    the_file_name = 'manual.pdf'  # 显示在弹出对话框中的默认的下载文件名
-    fname = '/species_tree/static/document/Program_of_identificate_species_dividing_line_manual.pdf'
-    response = FileResponse(open(cwd +fname,'rb'))
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
-    return response
+def query_get_results(request):
+    if request.method == "post":
+        query_info =  GetResultInfo(request.POST)
+        if query_info.is_valid():
+            email = query_info.cleaned_data['email']
+            access_code = query_info.cleaned_data['access_code']
+            try:
+                record_ = Records.objects.get(access_code)
+                if email == record_.email:
+                    fname = record_.resultfile.path
+                    the_file_name = fname.split('/')[-1]  # 显示在弹出对话框中的默认的下载文件名
+                    response = FileResponse(open(fname,'rb'))
+                    response['Content-Type'] = 'application/octet-stream'
+                    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+                    return response
+                else:
+                    return HttpResponse("Please put in correct infomation!")
+            except:
+                return HttpResponse("Please put in correct infomation!")
+        else:
+            error_msg = user_input.errors
+            return render(request,'home.html',{'userinfo':user_input,'errors':error_msg})
     return
 
 def save_post(request):
@@ -48,10 +65,12 @@ def save_post(request):
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
             inputfile = request.FILES['inputfile']
+            access_code = ''.join(random.choice(string.printable) for _ in range(15))
             record = Records.objects.create(user=user_name, inputfile=inputfile,
-                                            submit_date=datetime.now(), email=email)
+                                            submit_date=datetime.now(), email=email,
+                                            access_code=access_code)
             infile_path = record.inputfile.path
-            generate_tree.delay(infile_path,email,user_name,record)
+            generate_tree.delay(infile_path,email,user_name,record,access_code)
             return HttpResponse(success_str)
         else :
             error_msg = user_input.errors
