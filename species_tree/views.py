@@ -19,9 +19,9 @@ userinfo = UserInfo()
 
 class ResultInfo(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
-                           max_length=15,min_length=15,error_messages={'required':u'user cannot be empty ')
+                           error_messages={'required':u'user cannot be empty'})
     access_code = forms.CharField(widget=forms.FileInput(attrs={'style':'color:red'}),
-                                error_messages={'required':u'please full in correct file'})
+                                  max_length=15,min_length=15,error_messages={'required':u'please full in correct file'})
 
 resultinfo = ResultInfo()
 
