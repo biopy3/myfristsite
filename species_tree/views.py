@@ -14,12 +14,16 @@ class UserInfo(forms.Form):
                              error_messages={'required':u'please full in correct email'})
     inputfile = forms.FileField(widget=forms.FileInput(attrs={'style':'color:red'}),
                                 error_messages={'required':u'please full in correct file'})
-    resultfile = forms.FileField(widget=forms.FileInput(attrs={'style':'color:red'}),
-                                error_messages={'required':u'please full in correct file'})
-    access_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
-                           max_length=15,min_length=15,error_messages={'required':u'Access code cannot be empty '})
 
 userinfo = UserInfo()
+
+class ResultInfo(forms.Form):
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
+                           max_length=15,min_length=15,error_messages={'required':u'user cannot be empty ')
+    access_code = forms.CharField(widget=forms.FileInput(attrs={'style':'color:red'}),
+                                error_messages={'required':u'please full in correct file'})
+
+resultinfo = ResultInfo()
 
 def document(request):
     cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,7 +39,7 @@ def home_page(request):
 
 def query_get_results(request):
     if request.method == "post":
-        query_info =  GetResultInfo(request.POST)
+        query_info =  ResultInfo(request.POST)
         if query_info.is_valid():
             email = query_info.cleaned_data['email']
             access_code = query_info.cleaned_data['access_code']
@@ -53,8 +57,8 @@ def query_get_results(request):
             except:
                 return HttpResponse("Please put in correct infomation!")
         else:
-            error_msg = user_input.errors
-            return render(request,'home.html',{'userinfo':user_input,'errors':error_msg})
+            error_msg = query_info.errors
+            return render(request,'dispaly.html',{'resultinfo':resultinfo,'errors':error_msg})
     return
 
 def save_post(request):
@@ -71,9 +75,9 @@ def save_post(request):
                                             access_code=access_code)
             infile_path = record.inputfile.path
             generate_tree.delay(infile_path,email,user_name,record,access_code)
-            return HttpResponse(success_str)
+            return render(request,'home.html',{'resultinfo':resultinfo})
         else :
             error_msg = user_input.errors
-            return render(request,'home.html',{'userinfo':user_input,'errors':error_msg})
-
-    return HttpResponse("errors")
+            return render(request,'dispaly.html',{'userinfo':resultinfo,'errors':error_msg})
+    else:
+        return HttpResponse("errors")
