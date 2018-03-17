@@ -44,6 +44,7 @@ def query_get_results(request):
             email = query_info.cleaned_data['email']
             access_code = query_info.cleaned_data['access_code']
             return HttpResponse(access_code)
+        '''
             try:
                 record_ = Records.objects.get(access_code=access_code)
                 if email == record_.email:
@@ -57,6 +58,7 @@ def query_get_results(request):
                     return HttpResponse("Please put in correct infomation!")
             except:
                 return HttpResponse("Please put in correct infomation!")
+        '''
         else:
             error_msg = query_info.errors
             return render(request,'dislay.html',{'resultinfo':resultinfo,'errors':error_msg})
