@@ -2,7 +2,7 @@ from django.urls import path,re_path
 from . import views
 
 urlpatterns = [
-    path('result/download/',view.download_results),
+    path('result/download/',views.download_results),
     path('result/',views.query_get_results),
     path('manual.pdf',views.document),
     path('', views.home_page),
