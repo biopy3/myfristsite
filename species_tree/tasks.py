@@ -27,13 +27,12 @@ def every_file_complete_path(dir_path):
                 li.append(os.path.join(dirpath,filename))
     return li
 
-def handle_file(file_name_with_path,infile_path,record):
+def handle_file(file_name_with_path,infile_path,access_code):
     dir_path = file_name_with_path + '_' + time.strftime('%Y%m%d-%H-%M')
     postfix = os.path.splitext(infile_path)[-1]
     file_name = infile_path.split('/')[-1]
     if not os.path.exists(dir_path):
         os.mkdir(dir_path)
-        record.email
 
     if zipfile.is_zipfile(infile_path):
         zip_file = zipfile.ZipFile(infile_path)
@@ -173,9 +172,9 @@ def list_spcies(file_name_with_path):
     return 0
 
 @shared_task
-def generate_tree(infile_path,send_email,user_name,record):
+def generate_tree(infile_path,send_email,user_name,access_code):
     file_name_with_path = os.path.splitext(infile_path)[0]
-    dir_path = handle_file(file_name_with_path,infile_path,record)
+    dir_path = handle_file(file_name_with_path,infile_path,access_code)
     juge_os_and_set_PATH()
     file_path_list = every_file_complete_path(dir_path)
     for i in file_path_list:
@@ -208,6 +207,7 @@ def generate_tree(infile_path,send_email,user_name,record):
         list_spcies(file_name_with_path)
 
         shutil.make_archive(dir_path,'zip',dir_path)
+        record = Records.objects.get(access_code)
         record.resultfile.path = dir_path + '.zip'
         record.save()
 
@@ -215,7 +215,7 @@ def generate_tree(infile_path,send_email,user_name,record):
         from_email = settings.DEFAULT_FROM_EMAIL
         email = EmailMessage(
             subject='Hello,' + user_name + ':',
-            body="Thank you use the SCPC web service,we send this email with results for you.you access_code is:" + record.access_code,
+            body="Thank you use the SCPC web service,we send this email with results for you.you access_code is:" + access_code,
             from_email=from_email,
             to=[send_email]
         )
