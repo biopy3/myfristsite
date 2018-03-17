@@ -38,7 +38,6 @@ def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo})
 
 def query_get_results(request):
-    if request.method == "post":
         query_info =  ResultInfo(request.POST)
         if query_info.is_valid():
             email = query_info.cleaned_data['email']
@@ -59,8 +58,6 @@ def query_get_results(request):
         else:
             error_msg = query_info.errors
             return render(request,'dislay.html',{'resultinfo':resultinfo,'errors':error_msg})
-    else:
-        return HttpResponse('Not a post')
 
 def save_post(request):
     success_str = "Submit successfully,waiting for minites we will send results to your email!"
