@@ -60,7 +60,6 @@ def query_get_results(request):
         else:
             error_msg = query_info.errors
             return render(request,'dislay.html',{'resultinfo':resultinfo,'errors':error_msg})
-    return
 
 def save_post(request):
     success_str = "Submit successfully,waiting for minites we will send results to your email!"
