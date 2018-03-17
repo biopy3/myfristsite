@@ -58,7 +58,7 @@ def query_get_results(request):
                 return HttpResponse("Please put in correct infomation!")
         else:
             error_msg = query_info.errors
-            return render(request,'dispaly.html',{'resultinfo':resultinfo,'errors':error_msg})
+            return render(request,'dislay.html',{'resultinfo':resultinfo,'errors':error_msg})
     return
 
 def save_post(request):
@@ -74,7 +74,7 @@ def save_post(request):
                                             access_code=access_code,email=email,)
             infile_path = record.inputfile.path
             #generate_tree.delay(infile_path,email,user_name,record)
-            return render(request,'dispaly.html',{'resultinfo':resultinfo})
+            return render(request,'display.html',{'resultinfo':resultinfo})
         else :
             error_msg = user_input.errors
             return render(request,'home.html',{'userinfo':resultinfo,'errors':error_msg})
