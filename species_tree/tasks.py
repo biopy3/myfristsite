@@ -27,7 +27,7 @@ def every_file_complete_path(dir_path):
                 li.append(os.path.join(dirpath,filename))
     return li
 
-def handle_file(file_name_with_path,infile_path,access_code):
+def handle_file(file_name_with_path,infile_path):
     dir_path = file_name_with_path + '_' + time.strftime('%Y%m%d-%H-%M')
     postfix = os.path.splitext(infile_path)[-1]
     file_name = infile_path.split('/')[-1]
@@ -174,7 +174,7 @@ def list_spcies(file_name_with_path):
 @shared_task
 def generate_tree(infile_path,send_email,user_name,access_code):
     file_name_with_path = os.path.splitext(infile_path)[0]
-    dir_path = handle_file(file_name_with_path,infile_path,access_code)
+    dir_path = handle_file(file_name_with_path,infile_path)
     juge_os_and_set_PATH()
     file_path_list = every_file_complete_path(dir_path)
     for i in file_path_list:
@@ -207,7 +207,7 @@ def generate_tree(infile_path,send_email,user_name,access_code):
         list_spcies(file_name_with_path)
 
         shutil.make_archive(dir_path,'zip',dir_path)
-        record = Records.objects.get(access_code)
+        record = Records.objects.get(access_code=access_code)
         record.resultfile.path = dir_path + '.zip'
         record.save()
 
