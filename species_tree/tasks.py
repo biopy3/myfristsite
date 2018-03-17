@@ -208,7 +208,7 @@ def generate_tree(infile_path,send_email,user_name,access_code):
 
         shutil.make_archive(dir_path,'zip',dir_path)
         record = Records.objects.get(access_code=access_code)
-        record.resultfile.path = dir_path + '.zip'
+        record.resultfile = dir_path + '.zip'
         record.save()
 
         # send email
