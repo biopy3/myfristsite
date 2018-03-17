@@ -69,7 +69,7 @@ def save_post(request):
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
             inputfile = request.FILES['inputfile']
-            access_code = ''.join(random.choice(string.printable) for _ in range(15))
+            access_code = ''.join(random.choice(string.digits + string.letters + string.punctuation) for _ in range(15))
             record = Records.objects.create(user=user_name, inputfile=inputfile,
                                             access_code=access_code,email=email,)
             infile_path = record.inputfile.path
