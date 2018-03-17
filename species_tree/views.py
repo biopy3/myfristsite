@@ -75,7 +75,7 @@ def save_post(request):
                                             submit_date=datetime.now(), email=email,
                                             )
             infile_path = record.inputfile.path
-            generate_tree.delay(infile_path,email,user_name,record,access_code)
+            generate_tree.delay(infile_path,email,user_name,record)
             return render(request,'dispaly.html',{'resultinfo':resultinfo})
         else :
             error_msg = user_input.errors
