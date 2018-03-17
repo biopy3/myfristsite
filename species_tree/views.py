@@ -71,9 +71,7 @@ def save_post(request):
             inputfile = request.FILES['inputfile']
             access_code = ''.join(random.choice(string.printable) for _ in range(15))
             record = Records.objects.create(user=user_name, inputfile=inputfile,
-                                            access_code=access_code,
-                                            submit_date=datetime.now(), email=email,
-                                            )
+                                            access_code=access_code,email=email,)
             infile_path = record.inputfile.path
             generate_tree.delay(infile_path,email,user_name,record)
             return render(request,'dispaly.html',{'resultinfo':resultinfo})
