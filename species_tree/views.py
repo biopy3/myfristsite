@@ -40,7 +40,7 @@ def home_page(request):
 def query_get_results(request):
     return render(request,'display.html',{'resultinfo':resultinfo})
 
-def return_results(request):
+def download_results(request):
         query_info =  ResultInfo(request.POST)
         if query_info.is_valid():
             email = query_info.cleaned_data['email']
@@ -54,8 +54,6 @@ def return_results(request):
                     response['Content-Type'] = 'application/octet-stream'
                     response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
                     return response
-                else:
-                    return HttpResponse("Please put in correct infomation!")
             except:
                 return HttpResponse("Please put in correct infomation!")
         else:
