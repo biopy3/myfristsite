@@ -173,7 +173,7 @@ def list_spcies(file_name_with_path):
     return 0
 
 @shared_task
-def generate_tree(infile_path,send_email,user_name,record,access_code):
+def generate_tree(infile_path,send_email,user_name,record):
     file_name_with_path = os.path.splitext(infile_path)[0]
     dir_path = handle_file(file_name_with_path,infile_path,record)
     juge_os_and_set_PATH()
@@ -215,7 +215,7 @@ def generate_tree(infile_path,send_email,user_name,record,access_code):
         from_email = settings.DEFAULT_FROM_EMAIL
         email = EmailMessage(
             subject='Hello,' + user_name + ':',
-            body="Thank you use the SCPC web service,we send this email with results for you.you access_code is:" + access_code,
+            body="Thank you use the SCPC web service,we send this email with results for you.you access_code is:" + record.access_code,
             from_email=from_email,
             to=[send_email]
         )
