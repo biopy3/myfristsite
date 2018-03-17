@@ -43,6 +43,7 @@ def query_get_results(request):
         if query_info.is_valid():
             email = query_info.cleaned_data['email']
             access_code = query_info.cleaned_data['access_code']
+            return HttpResponse(access_code)
             try:
                 record_ = Records.objects.get(access_code=access_code)
                 if email == record_.email:
