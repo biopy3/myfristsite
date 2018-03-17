@@ -44,7 +44,7 @@ def query_get_results(request):
             email = query_info.cleaned_data['email']
             access_code = query_info.cleaned_data['access_code']
             try:
-                record_ = Records.objects.get(access_code)
+                record_ = Records.objects.get(access_code=access_code)
                 if email == record_.email:
                     fname = record_.resultfile.path
                     the_file_name = fname.split('/')[-1]  # 显示在弹出对话框中的默认的下载文件名
