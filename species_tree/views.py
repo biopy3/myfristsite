@@ -30,17 +30,15 @@ def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo})
 
 def download_results(request):
-    email = request.GET.get('email')
     access_code = request.GET.get('access_code')
     try:
         record_ = Records.objects.get(access_code=access_code)
-        if email == record_.email:
-            fname = record_.resultfile.path
-            the_file_name = fname.split('/')[-1]  # 显示在弹出对话框中的默认的下载文件名
-            response = FileResponse(open(fname,'rb'))
-            response['Content-Type'] = 'application/octet-stream'
-            response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
-            return response
+        fname = record_.resultfile.path
+        the_file_name = fname.split('/')[-1]  # 显示在弹出对话框中的默认的下载文件名
+        response = FileResponse(open(fname,'rb'))
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+        return response
     except:
         return HttpResponse("Some errors hanppened!")
 
