@@ -55,7 +55,7 @@ def save_post(request):
                                             access_code=access_code,email=email)
             infile_path = record.inputfile.path
             generate_tree.delay(infile_path,email,user_name,access_code)
-            return render(request,'display.html',{'resultinfo':resultinfo})
+            return HttpResponse("Thank you,we will send email for you!")
         else :
             error_msg = user_input.errors
             return render(request,'home.html',{'userinfo':resultinfo,'errors':error_msg})
