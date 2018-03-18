@@ -130,9 +130,11 @@ def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
     bins = math.ceil(max(results)/0.005)
-    n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='green', alpha=0.75)
+    n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='gray', alpha=0.75)
     plt.title("Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.")
     plt.savefig(file_name_with_path+'.png',format='png')
+    plt.xlabel("genetic distance")
+    plt.ylabel("frequency")
     for i in range(len(n)):
         if n[i] == 0:
             break
