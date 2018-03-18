@@ -29,9 +29,6 @@ def document(request):
 def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo})
 
-def query_get_results(request):
-    return render(request,'display.html',{'resultinfo':resultinfo})
-
 def download_results(request):
     email = request.GET.get('email')
     access_code = request.GET.get('access_code')
