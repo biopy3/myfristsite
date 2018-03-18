@@ -17,14 +17,6 @@ class UserInfo(forms.Form):
 
 userinfo = UserInfo()
 
-class ResultInfo(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
-                           error_messages={'required':u'user cannot be empty'})
-    access_code = forms.CharField(widget=forms.TextInput(attrs={'style':'color:red'}),
-                                  max_length=15,min_length=15,error_messages={'required':u'please full in correct file'})
-
-resultinfo = ResultInfo()
-
 def document(request):
     cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     the_file_name = 'manual.pdf'  # 显示在弹出对话框中的默认的下载文件名
@@ -41,24 +33,19 @@ def query_get_results(request):
     return render(request,'display.html',{'resultinfo':resultinfo})
 
 def download_results(request):
-        query_info =  ResultInfo(request.POST)
-        if query_info.is_valid():
-            email = query_info.cleaned_data['email']
-            access_code = query_info.cleaned_data['access_code']
-            try:
-                record_ = Records.objects.get(access_code=access_code)
-                if email == record_.email:
-                    fname = record_.resultfile.path
-                    the_file_name = fname.split('/')[-1]  # 显示在弹出对话框中的默认的下载文件名
-                    response = FileResponse(open(fname,'rb'))
-                    response['Content-Type'] = 'application/octet-stream'
-                    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
-                    return response
-            except:
-                return HttpResponse("Please put in correct infomation!")
-        else:
-            error_msg = query_info.errors
-            return render(request,'display.html',{'resultinfo':resultinfo,'errors':error_msg})
+    email = request.GET.get('email')
+    access_code = request.GET.get('access_code')
+    try:
+        record_ = Records.objects.get(access_code=access_code)
+        if email == record_.email:
+            fname = record_.resultfile.path
+            the_file_name = fname.split('/')[-1]  # 显示在弹出对话框中的默认的下载文件名
+            response = FileResponse(open(fname,'rb'))
+            response['Content-Type'] = 'application/octet-stream'
+            response['Content-Disposition'] = 'attachment;filename="{0}"'.format(the_file_name)
+            return response
+    except:
+        return HttpResponse("Some errors hanppened!")
 
 def save_post(request):
     success_str = "Submit successfully,waiting for minites we will send results to your email!"
