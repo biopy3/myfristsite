@@ -215,7 +215,8 @@ def generate_tree(infile_path,send_email,user_name,access_code):
         from_email = settings.DEFAULT_FROM_EMAIL
         email = EmailMessage(
             subject='Hello,' + user_name + ':',
-            body="Thank you use the SCPC web service,we send this email with results for you.you access_code is:" + access_code,
+            body="Thank you use the SCPC web service,we send this email with results for you.Please visit the url:\n"+
+            "http://45.76.122.117:8000/home/download/?access_code="+access_code,
             from_email=from_email,
             to=[send_email]
         )
