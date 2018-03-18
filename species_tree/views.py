@@ -5,7 +5,7 @@ from django.http import HttpResponse,HttpResponseRedirect,FileResponse
 from datetime import datetime
 from .tasks import generate_tree
 from django import forms
-import os,string,random
+import os,string,random,uuid
 
 class UserInfo(forms.Form):
     user = forms.CharField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
@@ -29,8 +29,7 @@ def document(request):
 def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo})
 
-def download_results(request):
-    access_code = request.GET.get('access_code')
+def download_results(request,access_code):
     try:
         record_ = Records.objects.get(access_code=access_code)
         fname = record_.resultfile.path
@@ -50,7 +49,7 @@ def save_post(request):
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
             inputfile = request.FILES['inputfile']
-            access_code = ''.join(random.choice(string.digits + string.ascii_letters + string.punctuation) for _ in range(15))
+            access_code = str(uuid.uuid1())
             record = Records.objects.create(user=user_name, inputfile=inputfile,
                                             access_code=access_code,email=email)
             infile_path = record.inputfile.path
