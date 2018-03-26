@@ -40,7 +40,7 @@ def handle_file(file_name_with_path,infile_path):
             zip_file.extract(names,dir_path)
 
     if postfix == '.fasta' or postfix == '.fas':
-        os.rename(infile_path,dir_path + '/' + file_name)
+        os.rename(infile_path,dir_path + '/' + file_name) #remove the file
 
     return dir_path
 
@@ -136,9 +136,9 @@ def plot(results,file_name_with_path):
     plt.xlabel("genetic distance")
     plt.ylabel("frequency")
     for i in range(len(n)):
-        if n[i] == 0:
+        if n[i] == 0 and n[i+1] != 0:
             break
-    return (bins[i]+bins[i+1])/2
+    return (bins[i])
 
 def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
@@ -173,12 +173,17 @@ def list_spcies(file_name_with_path):
     f.close()
     return 0
 
+def plot_divide_line(list,dir_path):
+    plt.scatter(list,list,c='b',marker = 'o')
+    plt.savefig(dir_path+'/scatter.png',format='png')
+
 @shared_task
 def generate_tree(infile_path,send_email,user_name,access_code):
     file_name_with_path = os.path.splitext(infile_path)[0]
     dir_path = handle_file(file_name_with_path,infile_path)
     juge_os_and_set_PATH()
     file_path_list = every_file_complete_path(dir_path)
+    divide_line_list = []
     for i in file_path_list:
         infile_path = i
         file_name_with_path = os.path.splitext(i)[0]
@@ -203,31 +208,33 @@ def generate_tree(infile_path,send_email,user_name,access_code):
         results = parse_tree(file_name_with_path, distance_dataframe)
 
         divide_line = plot(results, file_name_with_path)
-
+        divide_line_list.append(divide_line)
         modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
 
         list_spcies(file_name_with_path)
+        
+    plot_divide_line(divide_line_list,dir_path)
 
-        shutil.make_archive(dir_path,'zip',dir_path)
-        record = Records.objects.get(access_code=access_code)
-        record.resultfile = dir_path + '.zip'
-        record.save()
+    shutil.make_archive(dir_path,'zip',dir_path)
+    record = Records.objects.get(access_code=access_code)
+    record.resultfile = dir_path + '.zip'
+    record.save()
 
-        # send email
-        from_email = settings.DEFAULT_FROM_EMAIL
-        email = EmailMessage(
-            subject='Hello,' + user_name + ':',
-            body='<p>Thank you use the SCPC web service,we send this email with results for you.Please visit the url:\n</p>\
-            </br><a href=http://45.76.122.117:8000/home/result/download/'+access_code+'>\
-            http://45.76.122.117:8000/home/result/download/' + access_code + '</a>',
-           
-            from_email=from_email,
-            to=[send_email]
-        )
-        email.content_subtype = "html"  # Main content is now text/html
-        #email.attach_file('' + dir_path + '.zip')
-        email.send()
-        conn.close()
+    # send email
+    from_email = settings.DEFAULT_FROM_EMAIL
+    email = EmailMessage(
+        subject='Hello,' + user_name + ':',
+        body='<p>Thank you use the SCPC web service,we send this email with results for you.Please visit the url:\n</p>\
+        </br><a href=http://45.76.122.117:8000/home/result/download/'+access_code+'>\
+        http://45.76.122.117:8000/home/result/download/' + access_code + '</a>',
+
+        from_email=from_email,
+        to=[send_email]
+    )
+    email.content_subtype = "html"  # Main content is now text/html
+    #email.attach_file('' + dir_path + '.zip')
+    email.send()
+    conn.close()
 
     return 0
 
