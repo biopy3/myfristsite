@@ -106,7 +106,7 @@ def compute_pairwise_distance(conn,file_name_with_path, model='K80'):
     conn.eval(r_script)
     distance_dataframe = pd.DataFrame(conn.r.distance_data,
                                       index=list(conn.r.index), columns=list(conn.r.index))
-    
+
     return distance_dataframe
 
 def parse_tree(file_name_with_path, distance_dataframe):
@@ -130,7 +130,7 @@ def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
     bins = math.ceil(max(results)/0.005)
-    n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='gray', alpha=0.75)
+    n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='blue', alpha=0.75)
     plt.title("Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.")
     plt.xlabel("genetic distance")
     plt.ylabel("frequency")
@@ -179,7 +179,7 @@ def plot_divide_line(list,dir_path):
     plt.scatter(list,list,c='b',marker = 'o')
     plt.savefig(dir_path+'/scatter.png',format='png')
     plt.close()
-    
+
 @shared_task
 def generate_tree(infile_path,send_email,user_name,access_code):
     file_name_with_path = os.path.splitext(infile_path)[0]
@@ -215,7 +215,7 @@ def generate_tree(infile_path,send_email,user_name,access_code):
         modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
 
         list_spcies(file_name_with_path)
-        
+
     plot_divide_line(divide_line_list,dir_path)
     shutil.make_archive(dir_path,'zip',dir_path)
     record = Records.objects.get(access_code=access_code)
@@ -229,7 +229,6 @@ def generate_tree(infile_path,send_email,user_name,access_code):
         body='<p>Thank you use the SCPC web service,we send this email with results for you.Please visit the url:\n</p>\
         </br><a href=http://45.76.122.117:8000/home/result/download/'+access_code+'>\
         http://45.76.122.117:8000/home/result/download/' + access_code + '</a>',
-
         from_email=from_email,
         to=[send_email]
     )
@@ -239,4 +238,3 @@ def generate_tree(infile_path,send_email,user_name,access_code):
     conn.close()
 
     return 0
-

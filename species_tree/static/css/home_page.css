@@ -1,16 +1,12 @@
-/* 
- Adopted from the "Internet Management" theme
- by Luka Cvrk http://www.solucija.com
-*/
 
 body { 
-    color: rgb(255,255,255); background: rgb(240,240,240);
+    color: rgb(255,255,255); background: rgb(250,250,250);
     font: 0.85em Arial, Verdana, sans-serif; 
     text-align: center; line-height: 1.5em;
-    margin: 2.5em 0; 
+    margin: 10px; 
 }
 a {
-     color: #214466; background: inherit;
+    color: red; background: inherit; text-decoration:none;
  }
 a:hover {
     color: #000; background: inherit;
@@ -33,43 +29,36 @@ ul {
     clear: both; margin: 0 0 .5em 0; 
 }
 
-/*
-.centeralone {
-    clear: both;
-	width: 50%;
-	background: #fff;
-	color: #303030;
-	padding: .5% 1%;
-    text-align: left;
-	margin: 1em 1.1%;
-}
-*/
 
 #wrapper { 
-    width: 90%; margin: 0 auto; text-align: left; 
+    width: 100%;
+argin: 0 auto; text-align: left; 
 }
 
 #logo {
     clear: both;
     text-align: center;
     color: #000;
-	background: inherit;
-	margin: 0 0 .8em .3em;
-	padding: 0;
+	  background: inherit;
+	  margin: 20px;
+	  padding: 0;
 }
 
 #logo p {
+    margin: -10px 25px 0 0;
+    text-align:center;
+    color: rgb(210,56,52);
     font-weight: bold;
 }
 
 
 #logo h1 {
-/*	float: left;
+    text-align:center;
 color: #000;
 background: inherit;
-margin: 0 0 .8em .3em;
-padding: 0; */
-	font-size: 2.4em;
+margin: 0px;
+padding: 25px;
+font-size: 2.4em;
 }
 
 #top {
@@ -79,14 +68,13 @@ padding: 0; */
 
 #top {
 	float: right;
- 
+
 }
-		
-	
+
 #menu {
-    background: rgb(181,181,181);
+    background: rgb(0,0,0);
     clear: both; margin: 1 2% 1em 1%;
-    padding: 7px 0 7px 0; border-bottom: 1px solid #DCDBD5; border-top: 1px solid #DCDBD5;
+    padding: 7px 0 7px 0px; border-bottom: 1px solid #DCDBD5; border-top: 1px solid #DCDBD5;
     font-size: 1.3em;
     font-weight: bold;
     text-align: center;
@@ -96,8 +84,7 @@ padding: 0; */
 }
 #menu a {
     padding: 3px 15px; margin: 0 3px 0 0; text-decoration: none; 
-    color: #214466;
-    /* color: #808080; */
+    color: rgb(223,1,26);
     background: inherit; 
 }
 #menu a.current { 
@@ -113,78 +100,63 @@ padding: 0; */
 	text-align: center;
 }
 
-
-.document {
-	float: left;
-	margin: 1em 1.1% 2  3;
-	width: 62%;
-	background: #fff;
-	color: #303000;
-	padding: .5% 1%;
-    /* hack for centering when body's text is centered
-     text-align:left;
-     float: none
-	 margin: 1em 1.1%; // just the same as the others
-     margin-right: auto;
-	 margin-left: auto; */
-}
-
-.half {
-	float: left;
-	width: 45%;
-	margin: 1em 1.1%;
-	background: #fff;
-	color: #303030;
-	padding: .5% 1%;
+.both_line01{
+    display:-webkit-box;
+    width:100%;
 }
 
 .webserver {
-	float: left;
-	width: 29%;
-	margin: 1em 1.1%;
-	background: rgb(72,175,31);
-	color: #303030;
-	padding: .5% 1%;
+	  width: 27%;
+	  margin: 20px 10px 20px 20px;
+	  background: rgb(72,175,31);
+	  color: #303030;
+	  padding: 8px 2px 26px 20px;
 }
 
-/*
-.third h1 {
-	margin: 1% 0;
-	padding: 0;
-	color: #214466;
-	background: inherit;
-	font-size: 1.5em;
+.document {
+	margin: 20px 10px 20px 20px;
+	width: 61%;
+	background: #fff;
+	color: #303000;
+	padding: 8px 2px 26px 20px;
 }
-		
-.number {
-	background: #ccc;
-	padding: .6% 3%;
-	color: #FFF;
-}
-*/	
 
+.document p {
+    line-height: 25px;
+    margin: 10px 40px 10px 10px;
+}
+
+.both_line02{
+    display:-webkit-box;
+    width:100%;
+}
+
+.version {
+    width: 27%;
+    background: #fff;
+    color: #303000;
+    line-height: 1em;
+	  margin: 0px 9px 5px 20px;
+	  padding: 10px 0px 5px 20px;
+}
+
+.version p{
+    padding: 0px 8px 0px 0px;
+    line-height: 20px;
+}
 
 .cite {
-    float:left;
-    border-top: 1px dotted #ccc; padding: 5px 0;float: left;
-	  margin: 1em 1.1% 2  3;
 	  width: 62%;
 	  background: #fff;
 	  color: #303000;
-	  padding: .5% 1%;
-}
-			
-.version {
-    float:left;
-    background: #fff; color: #808080; padding: .7em 1em; margin: 0 1%;  
-    line-height: 1em;
-	margin: 1em 1.1%;
-	padding: .5% 1%;
+	  margin: 0px 10px 5px 20px;
+	  padding: 10px 0px 5px 20px;
 }
 
-#footer { 
-    margin: 2em 3%; text-align: right; 
+.cite p {
+    margin: 0px 10px 20px 8px;
 }
-#footer a {
-    text-decoration: none;
+
+.cite h2 {
+    margin: 0px;
 }

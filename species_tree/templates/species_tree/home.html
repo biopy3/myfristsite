@@ -12,44 +12,7 @@
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css"
           href="{% static 'css/home_page.css' %}" media="screen" />
-
-    <script type="text/javascript">
-        <!--
-
-             function last_modified() {
-              var t = new Date(document.lastModified);
-              document.write("Last modified on&nbsp;"+document.lastModified+"");
-             }
-
-             // Samhain Labs | email encoder:
-             // http://la-samhna.de/library/encoder.html
-             function emailaddress_clustalw() {
-              var i; var j; var Foo = new Array();
-              var gg = 95;
-              var xo = 224;
-
-              Foo[0]="7b209f273124257c612c20";
-              Foo[1]="292c342f7a232c35333421";
-              Foo[2]="2d38413624256f2a26637f";
-              Foo[3]="252e373536232e39423725";
-              Foo[4]="27712c287f722441";
-              var Bar = ""; var k = ""; var c;
-              for (i = 0; i < Foo.length; i++) {
-               for (j = 0; j < Foo[i].length; j += 2) {
-                k = Foo[i].slice(j,j+2);
-                c = parseInt(k, 16);
-                c = c^xo;
-                c = c - gg;
-                if (c < 0) c = c + 256;
-                Bar += String.fromCharCode(c);
-               }
-               gg = gg + 1; if (gg > 255) gg = 0;
-              }
-              document.write(decodeURI(Bar));
-            }
-            //-->
-    </script>
-</head>
+  </head>
 
 <body>
   <div id="wrapper">
@@ -59,10 +22,9 @@
         <img style="float:left;" id="toplogo" height="150" width="150"
         src="{% static 'image/icon_tree.png' %}"
         alt="ISDL logo" />
-      <h1>Welcome to the SCPC server</h1>
-      <!--</div>
-           <div class="clear"></div>
-           <div >-->
+        <h1>Welcome to the SCPC server</h1> </br> </a>
+
+
       <p>
         Detecting species boundaries using Sister Clade Progressive Claculation
       </p>
@@ -75,16 +37,17 @@
       <li><a href="#Webservers">Webservers</a></li>
       <!--<li><a href="#Download">Download</a></li>-->
       <li><a href="#Documentation">Documentation</a></li>
-      <!--<li><a href="#Contact">Contact</a></li>-->
-      <!--<li><a href="#News">News</a></li>-->
+      <li><a href="#version">Version</a></li>
+      <li><a href="#cite">Cite</a></li>
       <!--<li><a href="#Contact">Contact</a></li>-->
       <!--<li><a href="#Acknowledgements">Acknowledgements</a></li>-->
     </ul>
 
 
     <div class="clear"></div>
-    <div class="webserver">
-      <h1><a name="Webservers">Webservers</a></h1>
+    <div class="both_line01">
+        <div class="webserver">
+        <h2 name="Webservers">Webservers</h2>
       <p>
         You don't necessarily have to go through the hassle to install SCPC on
         your computer.To use the SCPC webserver,simply upload your aligned sequences in
@@ -101,23 +64,24 @@
     </div>
 
     <div class="document">
-      <h1><a name="Documentation">Documentation</a></h1>
+      <h2 name="Documentation">Documentation</h2>
       <p>
           In order to avoid possible errors of species delimitation and identification imposed by the artificial classification of morphology, we rejected the species status of all our samples and treated them all as completely identical individuals. The computing process was named as Sister Clade Progressive Calculation (SCPC), which implemented as follows: The genetic distances between the sister individuals or assemble were calculated in turn, from the top of the trees to the root. We hypothesize that genetic variation within a species is much smaller than that between species and thus a genetic gap exists. The pairwise distances were counted and their frequency distribution histograms were created. The first gap is the regarded as molecular threshold between species. 
       </p>        
     </div>
-
+    </div>
     <div class="clear"></div>
 
+   <div class="both_line02">
     <div class="version">
-        <p>Current version: SCPC 0.8.1(beta version)</p>
-        <p><a href="http://45.76.122.117:8000/document/manual.pdf">Click here </a>
+        <p><h2>Current version:</h2> SCPC 0.8.1(beta version)</p>
+        <p><a href="http://45.76.122.117:8000/document/manual.pdf" >Click here</a>
             to download the manual about the program.</p>
     </div>
 
     <div class="cite">
-        <p>
-            This program was conceived by Dr. Wei Zhang and developed by Rui Wang in Shandong University, Weihai. If you have any suggestion and question, please contact WZhang@sdu.edu.cn. If you find this software useful for your research, please cite the following work:
+        <h2>Cite:</h2>
+        <p>This program was conceived by Dr. Wei Zhang and developed by Rui Wang in Shandong University, Weihai. If you have any suggestion and question, please contact WZhang@sdu.edu.cn. If you find this software useful for your research, please cite the following work:
         </p>
         <p>
         1.XXX
@@ -126,7 +90,7 @@
         2.XXX
         </p>
     </div>
-
+   </div>
   </div>
   <!-- google analytics -->
   <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
