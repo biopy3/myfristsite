@@ -56,11 +56,7 @@ def clustal2phy(file_name_with_path):
     dict = {}
     for record in align:
         if len(record.id) > 10:
-            id_list = record.id.split("_")
-            id = ""
-            for i in range(length):
-                id = id + id_list[i][0]
-            id = id + id_list[-1][-8:]
+            id = record.id[-8:]
             dict[id] = record.id
             record.id = id
     AlignIO.write(align,file_name_with_path + ".phy","phylip")
