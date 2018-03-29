@@ -51,7 +51,7 @@ def save_post(request):
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
             inputfile = request.FILES['inputfile']
-            model = request.GET['model']
+            model = user_input.cleaned_data['model']
             access_code = str(uuid.uuid1())
             record = Records.objects.create(user=user_name, inputfile=inputfile,
                                             access_code=access_code,email=email)
