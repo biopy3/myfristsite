@@ -8,12 +8,17 @@ from django import forms
 import os,string,random,uuid
 
 class UserInfo(forms.Form):
+    modelist = [['K80','K80'],['JC69','JC69'],['TS','TS'],['TV','TV'],['N','N'],['raw','raw'],
+                ['F81','F81'],['K81','K81'],['F84','F84'],['BH87','BH87'],['T92','T92'],['TN93','TN93']
+                ,['GG95','GG95'],['logdet','logdet'],['paralin','paralin'],['indel','indel'],
+                ['indelblock','indelblock']]
     user = forms.CharField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
                            max_length=16,min_length=3,error_messages={'required':u'user cannot be empty '})
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'special','size': '25'}),
                              error_messages={'required':u'please full in correct email'})
     inputfile = forms.FileField(widget=forms.FileInput(attrs={'style':'color:red'}),
                                 error_messages={'required':u'please full in correct file'})
+    model = forms.ChoiceField(label='model',choices=modelist)
 
 
 modelist = ["K80","JC69","TS","TV","N","raw","F81","K81","F84","BH87", "T92","TN93","GG95","logdet","paralin","indel","indelblock"]
@@ -60,6 +65,6 @@ def save_post(request):
             return HttpResponse("Thank you,we will send email for you!")
         else :
             error_msg = user_input.errors
-            return render(request,'home.html',{'userinfo':resultinfo,'errors':error_msg})
+            return render(request,'home.html',{'userinfo':userinfo,'errors':error_msg})
     else:
         return HttpResponse("errors")
