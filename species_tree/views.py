@@ -15,6 +15,8 @@ class UserInfo(forms.Form):
     inputfile = forms.FileField(widget=forms.FileInput(attrs={'style':'color:red'}),
                                 error_messages={'required':u'please full in correct file'})
 
+
+modelist = ["K80","JC69","TS","TV","N","raw","F81","K81","F84","BH87", "T92","TN93","GG95","logdet","paralin","indel","indelblock"]
 userinfo = UserInfo()
 
 def document(request):
@@ -27,7 +29,7 @@ def document(request):
     return response
 
 def home_page(request):
-    return render(request,"home.html",{'userinfo': userinfo})
+    return render(request,"home.html",{'userinfo': userinfo,'modelist': modelist})
 
 def download_results(request,access_code):
     try:
@@ -49,11 +51,12 @@ def save_post(request):
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
             inputfile = request.FILES['inputfile']
+            model = request.GET['model']
             access_code = str(uuid.uuid1())
             record = Records.objects.create(user=user_name, inputfile=inputfile,
                                             access_code=access_code,email=email)
             infile_path = record.inputfile.path
-            generate_tree.delay(infile_path,email,user_name,access_code)
+            generate_tree.delay(infile_path,email,user_name,access_code,model)
             return HttpResponse("Thank you,we will send email for you!")
         else :
             error_msg = user_input.errors

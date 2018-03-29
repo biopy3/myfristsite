@@ -181,7 +181,7 @@ def plot_divide_line(list,dir_path):
     plt.close()
 
 @shared_task
-def generate_tree(infile_path,send_email,user_name,access_code):
+def generate_tree(infile_path,send_email,user_name,access_code,model):
     file_name_with_path = os.path.splitext(infile_path)[0]
     dir_path = handle_file(file_name_with_path,infile_path)
     juge_os_and_set_PATH()
@@ -203,7 +203,7 @@ def generate_tree(infile_path,send_email,user_name,access_code):
 
         conn = pyRserve.connect(host='localhost', port=6311)
 
-        distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,'k80')
+        distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,model)
 
         matrix_path = file_name_with_path + '_distance_matrix.csv'
         distance_dataframe.to_csv(matrix_path)

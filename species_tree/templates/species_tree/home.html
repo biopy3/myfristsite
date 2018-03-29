@@ -58,6 +58,12 @@
         {% csrf_token %}
         <p>your name: {{ userinfo.user }} {{ errors.user }}</p>
         <p>your email: {{ userinfo.email }} {{ errors.email }}</p>
+        <lable for="model">model:</lable>
+        <select name="model">
+            {% for model in modelist %}
+            <option value="{{ model }}"> {{ model }} </option>
+            {% endfor %}
+        </select></br>
         <p>choose file: {{ userinfo.inputfile }} <span>{{ errors.inputfile }}</span></p>
         <strong><input type="submit" value="submit"></strong>
       </form>
