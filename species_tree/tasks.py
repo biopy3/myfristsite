@@ -23,7 +23,7 @@ def every_file_complete_path(dir_path):
     for dirpath,dirnames,filenames in os.walk(dir_path):
         for filename in filenames:
             postfix = os.path.splitext(filename)[1]
-            if postfix == '.fasta' or postfix == '.fas':
+            if postfix == '.fasta' or postfix == '.fas' or postfix =='.aln':
                 li.append(os.path.join(dirpath,filename))
     return li
 
@@ -39,8 +39,8 @@ def handle_file(file_name_with_path,infile_path):
         for names in zip_file.namelist():
             zip_file.extract(names,dir_path)
 
-    if postfix == '.fasta' or postfix == '.fas':
-        os.rename(infile_path,dir_path + '/' + file_name) #remove the file
+    if postfix == '.fasta' or postfix == '.fas' or postfix == '.aln':
+        os.rename(infile_path,dir_path + '/' + file_name) #move the file
 
     return dir_path
 
@@ -192,10 +192,11 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
         file_name_with_path = os.path.splitext(i)[0]
 
         file_name = 'species_tree/recordsfile/' + file_name_with_path.split('species_tree/recordsfile/')[-1]
-
-        cline = ClustalwCommandline("clustalw2", infile=infile_path,
+        postfix = os.path.splitext(i)[1]
+        if  postfix == '.fasta' or postfix == '.fas':
+            cline = ClustalwCommandline("clustalw2", infile=infile_path,
                                 outfile=file_name + ".aln")  # Alignment multisequence
-        cline()
+            cline()
 
         dict = clustal2phy(file_name_with_path)
         construc_tree(file_name_with_path, file_name,dict)
