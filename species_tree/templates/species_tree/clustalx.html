@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SCPC</title>
+    <meta charset="ISO-8859-1" />
+    <meta name="description" content="homepage of the program for Identificate Species Dividing Line
+                                      and build species tree" />
+    <meta name="keywords" content="ISDL, isdl, identificate species dividing line,
+                                   species tree" />
+    <meta name="author" content="Rui Wang" />
+    <meta http-equiv="refresh" content="2000" />
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'css/home_page.css' %}" media="screen" />
+  </head>
+
+<body>
+  <div id="wrapper">
+    <div id="logo">
+      {% load staticfiles %}
+      <a href="">
+        <img style="float:left;" id="toplogo" height="150" width="150"
+        src="{% static 'image/icon_tree.png' %}"
+        alt="ISDL logo" />
+        <h1>Welcome to the SCPC server</h1> </br> </a>
+
+
+      <p>
+        Detecting species boundaries using Sister Clade Progressive Claculation
+      </p>
+    </div>
+
+
+    <ul id="menu">
+      <!--<li><a class="current" href="#" title="Home">Home</a></li>-->
+      <li><a href="/home/">Home</a></li>
+      <li><a href="#Webservers">Webservers</a></li>
+      <!--<li><a href="#Download">Download</a></li>-->
+      <li><a href="#Documentation">Documentation</a></li>
+      <li><a href="#version">Version</a></li>
+      <li><a href="#cite">Cite</a></li>
+      <!--<li><a href="#Contact">Contact</a></li>-->
+      <!--<li><a href="#Acknowledgements">Acknowledgements</a></li>-->
+    </ul>
+
+
+    <div class="clear"></div>
+    <div class="both_line01">
+        <div class="webserver">
+        <h2 name="Webservers">Webservers</h2>
+      <p>
+        You don't necessarily have to go through the hassle to install SCPC on
+        your computer.To use the SCPC webserver,simply upload your aligned sequences in
+        FASTA format and input your information below:
+      </p>
+
+      <form action="clustalx_save/" method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <p>your name: {{ userinfo.user }} {{ errors.user }}</p>
+        <p>your email: {{ userinfo.email }} {{ errors.email }}</p>
+        <p>choose file: {{ userinfo.inputfile }} <span>{{ errors.inputfile }}</span></p>
+        <strong><input type="submit" value="submit"></strong>
+      </form>
+    </div>
+
+    <div class="document">
+      <h2 name="Documentation">Documentation</h2>
+      <p>
+          In order to avoid possible errors of species delimitation and identification imposed by the artificial classification of morphology, we rejected the species status of all our samples and treated them all as completely identical individuals. The computing process was named as Sister Clade Progressive Calculation (SCPC), which implemented as follows: The genetic distances between the sister individuals or assemble were calculated in turn, from the top of the trees to the root. We hypothesize that genetic variation within a species is much smaller than that between species and thus a genetic gap exists. The pairwise distances were counted and their frequency distribution histograms were created. The first gap is the regarded as molecular threshold between species. 
+      </p>        
+    </div>
+    </div>
+    <div class="clear"></div>
+
+   <div class="both_line02">
+    <div class="version">
+        <p><h2>Current version:</h2> SCPC 0.8.1(beta version)</p>
+        <p><a href="http://45.76.122.117:8000/document/manual.pdf" >Click here</a>
+            to download the manual about the program.</p>
+    </div>
+
+    <div class="cite">
+        <h2>Cite:</h2>
+        <p>This program was conceived by Dr. Wei Zhang and developed by Rui Wang in Shandong University, Weihai. If you have any suggestion and question, please contact WZhang@sdu.edu.cn. If you find this software useful for your research, please cite the following work:
+        </p>
+        <p>
+        1.XXX
+        </p>
+        <p>
+        2.XXX
+        </p>
+    </div>
+   </div>
+  </div>
+  <!-- google analytics -->
+  <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+    _uacct = "UA-3760204-1";
+    urchinTracker();
+  </script>
+</body>
+</html>

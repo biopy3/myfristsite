@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 from Bio import AlignIO
 import copy,math,pyRserve,time
 import zipfile,shutil
+import subprocess,os
 
 def every_file_complete_path(dir_path):
     li = []
@@ -237,3 +238,33 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
     conn.close()
 
     return 0
+
+
+def clustalx_for_align(infile_path,email,user_name,access_code):
+    file_name_with_path = os.path.splitext(infile_path)[0]
+    dir_path = handle_file(file_name_with_path,infile_path)
+    file_path_list = every_file_complete_path(dir_path)
+    juge_os_and_set_PATH()
+
+    for file_name in file_path_list:
+        subprocess.call(["clustalw2","-INFILE="+file_name,"-ALIGN","-QUIET","-OUTPUT=FASTA","-OUTFILE="+ os.path.splitext(file_name)[0]+'_aligned.fasta'])
+        os.remove(os.path.splitext(file_name)[0]+'.dnd')
+        os.remove(file_name)
+
+
+    shutil.make_archive(dir_path,'zip',dir_path)
+    shutil.rmtree(dir_path)
+    record.output_file = dir_path + '.zip'
+
+    #send email
+    from_email = settings.DEFAULT_FROM_EMAIL
+    email = EmailMessage(
+        subject='Hello,' + user_name + ':',
+        body='<p>Thank you use the SCPC web service,we send this email with results for you.Please visit the url:\n</p>\
+        </br><a href=http://45.76.122.117:8000/clustalx/result_download/'+access_code+'>\
+        http://45.76.122.117:8000/clustalx/result_download/' + access_code + '</a>',
+        from_email=from_email,
+        to=[send_email]
+    )
+    email.content_subtype = "html"  # Main content is now text/html
+    email.send()

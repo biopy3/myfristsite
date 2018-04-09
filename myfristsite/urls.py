@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
+    path('clustalx/',include('species_tree.urls')),
     path('document/',include('species_tree.urls')),
     path('save_post/',include('species_tree.urls')),
     path('admin/', admin.site.urls),
