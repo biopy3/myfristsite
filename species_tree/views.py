@@ -47,7 +47,7 @@ def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo,'modelist': modelist})
 
 def clustalx_page(request):
-    return render(requset,"clustalx.html",{'clustalx_info':userinfo})
+    return render(request,"clustalx.html",{'clustalx_info':userinfo})
 
 def download_results(request,access_code):
     try:
