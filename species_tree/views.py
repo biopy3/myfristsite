@@ -105,7 +105,7 @@ def clustalx_save(request):
 def clustalx_result_download(request,access_code):
     try:
         record_ = clustalx_model.objects.get(access_code=access_code)
-        fname = record_.resultfile.path
+        fname = record_.output_file.path
         the_file_name = fname.split('/')[-1]  # 显示在弹出对话框中的默认的下载文件名
         response = FileResponse(open(fname,'rb'))
         response['Content-Type'] = 'application/octet-stream'
