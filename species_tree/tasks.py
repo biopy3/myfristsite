@@ -21,6 +21,10 @@ import subprocess,os
 
 def every_file_complete_path(dir_path):
     li = []
+    try:
+        shutil.rmtree(dir_path + '__MACOSX/')
+    except:
+        pass
     for dirpath,dirnames,filenames in os.walk(dir_path):
         for filename in filenames:
             postfix = os.path.splitext(filename)[1]
