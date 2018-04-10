@@ -23,7 +23,7 @@ class UserInfo(forms.Form):
 
 modelist = ["K80","JC69","TS","TV","N","raw","F81","K81","F84","BH87", "T92","TN93","GG95","logdet","paralin","indel","indelblock"]
 
-class clustalx_info(forms.Form):
+class Clustalx_info(forms.Form):
     user = user = forms.CharField(widget=forms.TextInput(attrs={'class': 'special','size': '15'}),
                            max_length=16,min_length=3,error_messages={'required':u'user cannot be empty '})
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'special','size': '25'}),
@@ -32,7 +32,7 @@ class clustalx_info(forms.Form):
                                 error_messages={'required':u'please full in correct file'})
 
 userinfo = UserInfo()
-clustalx_info = clustalx_info()
+clustalx_info = Clustalx_info()
 
 def document(request):
     cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -64,7 +64,7 @@ def download_results(request,access_code):
 def save_post(request):
     success_str = "Submit successfully,waiting for minites we will send results to your email!"
     if request.method == "POST":
-        user_input = clustalx_info(request.POST,request.FILES) #request.POST is include all data
+        user_input = UserInfo(request.POST,request.FILES) #request.POST is include all data
         if user_input.is_valid():
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
@@ -85,7 +85,7 @@ def save_post(request):
 def clustalx_save(request):
     success_str = "Submit successfully,waiting for minites we will send results to your email!"
     if request.method == "POST":
-        user_input = clustalx_info(request.POST,request.FILES) #request.POST is include all data
+        user_input = Clustalx_info(request.POST,request.FILES) #request.POST is include all data
         if user_input.is_valid():
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
