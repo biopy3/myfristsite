@@ -240,7 +240,7 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
     return 0
 
 @shared_task
-def clustalx_for_align(infile_path,email,user_name,access_code):
+def clustalx_for_align(infile_path,send_email,user_name,access_code):
     file_name_with_path = os.path.splitext(infile_path)[0]
     dir_path = handle_file(file_name_with_path,infile_path)
     file_path_list = every_file_complete_path(dir_path)
