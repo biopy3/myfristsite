@@ -70,6 +70,24 @@ def clustal2phy(file_name_with_path):
 
     return dict
 
+def fasta2phy(file_name_with_path):
+    try:
+        align = AlignIO.read(file_name_with_path + ".fas","fasta")
+    except:
+        align = AlignIO.read(file_name_with_path + ".fasta","fasta")
+    length = 2
+    dict = {}
+    for record in align:
+        if len(record.id) > 10:
+            id_ = record.id[-10:]
+            dict[id_] = record.id
+            record.id = id_
+        else:
+            dict[record.id] = record.id
+    AlignIO.write(align,file_name_with_path + ".phy","phylip")
+
+    return dict
+
 def construc_tree(file_name_with_path, file_name,dict):
     phyml = PhymlCommandline(input=file_name_with_path + '.phy')
     phyml()
@@ -197,11 +215,12 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
         file_name = 'species_tree/recordsfile/' + file_name_with_path.split('species_tree/recordsfile/')[-1]
         postfix = os.path.splitext(i)[1]
         if  postfix == '.fasta' or postfix == '.fas':
-            cline = ClustalwCommandline("clustalw2", infile=infile_path,
-                                outfile=file_name + ".aln")  # Alignment multisequence
-            cline()
-
-        dict = clustal2phy(file_name_with_path)
+            dict = fasta2phy(file_name_with_path)
+            #cline = ClustalwCommandline("clustalw2", infile=infile_path,
+            #                   outfile=file_name + ".aln")  # Alignment multisequence
+            #cline()
+        else:
+            dict = clustal2phy(file_name_with_path)
         construc_tree(file_name_with_path, file_name,dict)
 
 
