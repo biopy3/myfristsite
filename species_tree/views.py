@@ -3,7 +3,7 @@ from .models import Records,clustalx_model
 from django.http import HttpResponse,HttpResponseRedirect,FileResponse
 #from django.template import loader
 from datetime import datetime
-from .tasks import generate_tree
+from .tasks import generate_tree,clustalx_for_align
 from django import forms
 import os,string,random,uuid
 
