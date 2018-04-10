@@ -18,7 +18,7 @@
               href="{% static 'css/clustalx_page.css' %}" media="screen" />
     </head>
 
-        <link rel="icon" type="image/png" href="../images/omega_icon.png" />
+        <link rel="icon" type="image/png" src="{% static 'image/clustalx.png'%}" />
 
 
         <script type="text/javascript">
@@ -63,11 +63,11 @@
             <div id="logo">
                 <a href="http://www.ucd.ie">
                     <img style="float:right;" id="toplogo"
-                         src="../images/ucd_brandmark_colour_small_50p_trans.png"
+                         src="{% static '/image/ucd.png' %}"
                          alt="UCD logo" />
                 </a>
                 <img style="float:left;" 
-                     src="../images/clustalw_title.png"
+                     src="{% static '/image/clustalx.png' %}"
                      alt="Clustal logo" />
                 <h1>Clustal W / Clustal X</h1>
                 <!--</div>
@@ -123,15 +123,15 @@
 
                     <form action="save_post/" method="post" enctype="multipart/form-data" >
                         {% csrf_token %}
-                        <p>your name: {{ userinfo.user }} {{ errors.user }}</p>
-                        <p>your email: {{ userinfo.email }} {{ errors.email }}</p>
+                        <p>your name: {{ clustalx_info.user }} {{ errors.user }}</p>
+                        <p>your email: {{ clustalx_info.email }} {{ errors.email }}</p>
                         <lable for="model">model:</lable>
                         <select name="model">
                             {% for model in modelist %}
                             <option value="{{ model }}"> {{ model }} </option>
                             {% endfor %}
                         </select></br>
-                        <p>choose file: {{ userinfo.inputfile }} <span>{{ errors.inputfile }}</span></p>
+                        <p>choose file: {{ clustalx_info.inputfile }} <span>{{ errors.inputfile }}</span></p>
                         <strong><input type="submit" value="submit"></strong>
                     </form>
                 </div>
