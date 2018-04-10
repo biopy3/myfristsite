@@ -121,7 +121,7 @@
                         FASTA format and input your information below:
                     </p>
 
-                    <form action="clustalx_save/" method="post" enctype="multipart/form-data" >
+                    <form action="../clustalx_save/" method="post" enctype="multipart/form-data" >
                         {% csrf_token %}
                         <p>your name: {{ clustalx_info.user }} {{ errors.user }}</p>
 			    <p>your email: {{ clustalx_info.email }} {{ errors.email }}</p>
@@ -397,7 +397,7 @@
                      <br />-->
                 <div style="float:left; clear:both">
                     <a href="http://www.sfi.ie/">
-                        <img src="../images/sfi_pos2_b_50p.jpg" alt="SFI logo" />
+                        <img src="{% static 'image/sfi.jpg'%" alt="SFI logo" />
                     </a>
                 </div>
                 <p style="padding-top:10px;">
