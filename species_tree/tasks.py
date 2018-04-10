@@ -1,7 +1,7 @@
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-from .models import Records
+from .models import Records,clustalx_model
 from django.core.mail import EmailMessage
 from django.conf import settings
 import os,sys
@@ -254,6 +254,7 @@ def clustalx_for_align(infile_path,email,user_name,access_code):
 
     shutil.make_archive(dir_path,'zip',dir_path)
     shutil.rmtree(dir_path)
+    record = clustalx_model.objects.get(access_code=access_code)
     record.output_file = dir_path + '.zip'
 
     #send email
