@@ -121,7 +121,7 @@
                         FASTA format and input your information below:
                     </p>
 
-                    <form action="save_post/" method="post" enctype="multipart/form-data" >
+                    <form action="clustalx_save/" method="post" enctype="multipart/form-data" >
                         {% csrf_token %}
                         <p>your name: {{ clustalx_info.user }} {{ errors.user }}</p>
 			    <p>your email: {{ clustalx_info.email }} {{ errors.email }}</p>
