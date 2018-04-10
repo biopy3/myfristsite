@@ -124,13 +124,7 @@
                     <form action="save_post/" method="post" enctype="multipart/form-data" >
                         {% csrf_token %}
                         <p>your name: {{ clustalx_info.user }} {{ errors.user }}</p>
-                        <p>your email: {{ clustalx_info.email }} {{ errors.email }}</p>
-                        <lable for="model">model:</lable>
-                        <select name="model">
-                            {% for model in modelist %}
-                            <option value="{{ model }}"> {{ model }} </option>
-                            {% endfor %}
-                        </select></br>
+			    <p>your email: {{ clustalx_info.email }} {{ errors.email }}</p>
                         <p>choose file: {{ clustalx_info.inputfile }} <span>{{ errors.inputfile }}</span></p>
                         <strong><input type="submit" value="submit"></strong>
                     </form>
