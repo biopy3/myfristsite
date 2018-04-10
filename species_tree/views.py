@@ -47,7 +47,7 @@ def home_page(request):
     return render(request,"home.html",{'userinfo': userinfo,'modelist': modelist})
 
 def clustalx_page(request):
-    return render(request,"clustalx.html",{'clustalx_info':userinfo})
+    return render(request,"clustalx.html",{'clustalx_info':clustalx_info})
 
 def download_results(request,access_code):
     try:
@@ -98,7 +98,7 @@ def clustalx_save(request):
             return HttpResponse("Thank you,we will send email for you!")
         else :
             error_msg = user_input.errors
-            return render(request,'clustalx.html',{'clustalx_info':userinfo,'errors':error_msg})
+            return render(request,'clustalx.html',{'clustalx_info':clustalx_info,'errors':error_msg})
     else:
         return HttpResponse("errors")
 

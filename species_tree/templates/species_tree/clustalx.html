@@ -56,9 +56,9 @@
 
       <form action="clustalx_save/" method="post" enctype="multipart/form-data" >
         {% csrf_token %}
-        <p>your name: {{ userinfo.user }} {{ errors.user }}</p>
-        <p>your email: {{ userinfo.email }} {{ errors.email }}</p>
-        <p>choose file: {{ userinfo.inputfile }} <span>{{ errors.inputfile }}</span></p>
+        <p>your name: {{ clustalx_info.user }} {{ errors.user }}</p>
+        <p>your email: {{ clustalx_info.email }} {{ errors.email }}</p>
+        <p>choose file: {{ clustalx_info.inputfile }} <span>{{ errors.inputfile }}</span></p>
         <strong><input type="submit" value="submit"></strong>
       </form>
     </div>
