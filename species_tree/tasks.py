@@ -256,6 +256,7 @@ def clustalx_for_align(infile_path,send_email,user_name,access_code):
     shutil.rmtree(dir_path)
     record = clustalx_model.objects.get(access_code=access_code)
     record.output_file = dir_path + '.zip'
+    record.save()
 
     #send email
     from_email = settings.DEFAULT_FROM_EMAIL
