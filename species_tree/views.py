@@ -85,7 +85,7 @@ def save_post(request):
 def clustalx_save(request):
     success_str = "Submit successfully,waiting for minites we will send results to your email!"
     if request.method == "POST":
-        user_input = UserInfo(request.POST,request.FILES) #request.POST is include all data
+        user_input = clustalx_info(request.POST,request.FILES) #request.POST is include all data
         if user_input.is_valid():
             user_name = user_input.cleaned_data['user']
             email = user_input.cleaned_data['email']
