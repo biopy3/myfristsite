@@ -114,7 +114,7 @@ def compute_pairwise_distance(conn,file_name_with_path,model='K80',postfix='.aln
         library('ape')
         compute_distance <- function(file,model)
         {
-            alignment_data <- read.dna(file=file,format='clustal')
+            alignment_data <- read.dna(file=file,format='fasta')
             index <- attr(alignment_data,"dimnames")[[1]]
             distance_data <- dist.dna(alignment_data,model=model,as.matrix=TRUE)
             result <- list(a = distance_data,b = index)
