@@ -103,7 +103,7 @@ def parse_alignment(file_name_with_path):
                                    dtype=np.character)
     return align_dataframe
 
-def compute_pairwise_distance(conn,file_name_with_path, model='K80',postfix):
+def compute_pairwise_distance(conn,file_name_with_path,model='K80',postfix='.aln'):
     conn.r.file = file_name_with_path + postfix
 
 #        model   a character string specifying the evolutionary model to be used;
