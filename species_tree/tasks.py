@@ -71,10 +71,10 @@ def clustal2phy(file_name_with_path):
     return dict
 
 def fasta2phy(file_name_with_path):
-    try:
-        align = AlignIO.read(file_name_with_path + ".fas","fasta")
-    except:
-        align = AlignIO.read(file_name_with_path + ".fasta","fasta")
+    #try:
+    align = AlignIO.read(file_name_with_path + ".fas","fasta")
+    #except:
+    #  align = AlignIO.read(file_name_with_path + ".fasta","fasta")
     length = 2
     dict = {}
     for record in align:
