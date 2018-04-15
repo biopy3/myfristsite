@@ -103,8 +103,8 @@ def parse_alignment(file_name_with_path):
                                    dtype=np.character)
     return align_dataframe
 
-def compute_pairwise_distance(conn,file_name_with_path, model='K80'):
-    conn.r.file = file_name_with_path + '.aln'
+def compute_pairwise_distance(conn,file_name_with_path, model='K80',postfix):
+    conn.r.file = file_name_with_path + postfix
 
 #        model   a character string specifying the evolutionary model to be used;
  #               must be one of "raw", "N", "TS", "TV", "JC69", "K80" (the default),
@@ -226,7 +226,7 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
 
         conn = pyRserve.connect(host='localhost', port=6311)
 
-        distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,model)
+        distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,model,postfix)
 
         matrix_path = file_name_with_path + '_distance_matrix.csv'
         distance_dataframe.to_csv(matrix_path)
