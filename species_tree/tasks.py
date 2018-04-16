@@ -208,43 +208,58 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
     juge_os_and_set_PATH()
     file_path_list = every_file_complete_path(dir_path)
     divide_line_list = []
+    error_file = []
+    successed_file = []
     for i in file_path_list:
-        infile_path = i
-        file_name_with_path = os.path.splitext(i)[0]
+        try:
+            infile_path = i
+            file_name_with_path = os.path.splitext(i)[0]
 
-        file_name = 'species_tree/recordsfile/' + file_name_with_path.split('species_tree/recordsfile/')[-1]
-        postfix = os.path.splitext(i)[1]
-        if  postfix == '.fasta' or postfix == '.fas':
-            dict = fasta2phy(file_name_with_path)
-            #cline = ClustalwCommandline("clustalw2", infile=infile_path,
-            #                   outfile=file_name + ".aln")  # Alignment multisequence
-            #cline()
-        else:
-            dict = clustal2phy(file_name_with_path)
-        construc_tree(file_name_with_path, file_name,dict)
+            file_name = 'species_tree/recordsfile/' + file_name_with_path.split('species_tree/recordsfile/')[-1]
+            postfix = os.path.splitext(i)[1]
+            if  postfix == '.fasta' or postfix == '.fas':
+                dict = fasta2phy(file_name_with_path)
+                #cline = ClustalwCommandline("clustalw2", infile=infile_path,
+                #                   outfile=file_name + ".aln")  # Alignment multisequence
+                #cline()
+            else:
+                dict = clustal2phy(file_name_with_path)
+            construc_tree(file_name_with_path, file_name,dict)
 
 
-        conn = pyRserve.connect(host='localhost', port=6311)
+            conn = pyRserve.connect(host='localhost', port=6311)
 
-        distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,model,postfix)
+            distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,model,postfix)
 
-        matrix_path = file_name_with_path + '_distance_matrix.csv'
-        distance_dataframe.to_csv(matrix_path)
+            matrix_path = file_name_with_path + '_distance_matrix.csv'
+            distance_dataframe.to_csv(matrix_path)
 
-        results = parse_tree(file_name_with_path, distance_dataframe)
+            results = parse_tree(file_name_with_path, distance_dataframe)
 
-        divide_line = plot(results, file_name_with_path)
-        divide_line_list.append(divide_line)
-        modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
+            divide_line = plot(results, file_name_with_path)
+            divide_line_list.append(divide_line)
+            modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
 
-        list_spcies(file_name_with_path)
-
+            list_spcies(file_name_with_path)
+            successed_file.append(i)
+        except:
+            error_file.append(i)
+            continue
+            
     plot_divide_line(divide_line_list,dir_path)
+    f = open(dir_path+"/error_file.txt",'w')
+    for i in error_file:
+        f.write(i+'\n')
+    f.close()
+    f = open(dir_path+"/successed_file.txt",'w')
+    for i in successed_file:
+        f.write(i+'\n')
+    f.close()
     shutil.make_archive(dir_path,'zip',dir_path)
     record = Records.objects.get(access_code=access_code)
     record.resultfile = dir_path + '.zip'
     record.save()
-
+    
     # send email
     from_email = settings.DEFAULT_FROM_EMAIL
     email = EmailMessage(
