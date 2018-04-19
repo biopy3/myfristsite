@@ -235,7 +235,11 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
             distance_dataframe.to_csv(matrix_path)
 
             results = parse_tree(file_name_with_path, distance_dataframe)
-
+            bar_data = file_name_with_path+"_bar_data.csv"
+            f = open(bar_data,"w")
+            for i in results:
+            		f.write(i+"\n")
+						f.close()
             divide_line = plot(results, file_name_with_path)
             divide_line_list.append(divide_line)
             modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
