@@ -143,7 +143,7 @@ def parse_tree(file_name_with_path, file_name, distance_dataframe, min_number):
             for leaf in child.get_terminals():
                 leaf_1 = leaf.name
                 for rest_child in child_rest:
-                    for leaf in rest_child.get_terminals()
+                    for leaf in rest_child.get_terminals():
                         leaf_2 = leaf.name
                         distance_li.append(distance_dataframe[leaf_1][leaf_2])
             results.append(sum(distance_li) / len(distance_li))
