@@ -262,8 +262,8 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
     f.close()
     f = open(dir_path+"/successed_file.txt",'w')
     for i in successed_file:
-        f.write(i+'\n')
-    f.close()
+		f.write(i+'\n')
+		f.close()
     shutil.make_archive(dir_path,'zip',dir_path)
     record = Records.objects.get(access_code=access_code)
     record.resultfile = dir_path + '.zip'
