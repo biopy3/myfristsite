@@ -130,28 +130,30 @@ def compute_pairwise_distance(conn,file_name_with_path,model='K80',postfix='.aln
 
     return distance_dataframe
 
-def parse_tree(file_name_with_path, distance_dataframe):
+def parse_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
-    li_0 = []
-    for clade in tree.get_nonterminals():
-        li = list(itertools.combinations(clade, 2))
-        li_1 = []
-        for clade_pair in li:
-            li_2 = []
-            for leaf in clade_pair[0].get_terminals():
+    newtree = copy.deepcopy(tree)
+    clades = newtree.get_nonterminals()
+    results = []
+    for i in range(len(clades)):
+        children = clades[i].clades
+        for child in children:
+            distance_li = []
+            child_rest = children.remove(child)
+            for leaf in child.get_terminals():
                 leaf_1 = leaf.name
-                for leaf in clade_pair[1].get_terminals():
-                    leaf2 = leaf.name
-                    li_2.append(distance_dataframe[leaf_1][leaf2])
-            li_1.append(sum(li_2) / len(li_2))
-        li_0.append(max(li_1))
-    return li_0
+                for rest_child in child_rest:
+                    for leaf in rest_child.get_terminals()
+                        leaf_2 = leaf.name
+                        distance_li.append(distance_dataframe[leaf_1][leaf_2])
+            results.append(sum(distance_li) / len(distance_li))
+    return results
 
 def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
     bins = math.ceil(max(results)/0.005)
-    n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='blue', alpha=0.75)
+    n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='blue', alpha=1)
     plt.title("Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.")
     plt.xlabel("genetic distance")
     plt.ylabel("frequency")
@@ -167,19 +169,22 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
     newtree = copy.deepcopy(tree)
     clades = newtree.get_nonterminals()
-    for clade in clades[1:]:
-        li = list(itertools.combinations(clade, 2))
-        li_1 = []
-        for clade_pair in li:
-            li_2 = []
-            for leaf in clade_pair[0].get_terminals():
-                leaf_1 = leaf.name
-                for leaf in clade_pair[1].get_terminals():
-                    leaf2 = leaf.name
-                    li_2.append(distance_dataframe[leaf_1][leaf2])
-            li_1.append(sum(li_2) / len(li_2))
-        if max(li_1) < min_number:
-            newtree.collapse(clade)
+    for i in range(len(clades)):
+        children = clades[i].clades
+        for child in children:
+            distance_li = []
+            if child.is_terminal():
+                continue
+            else:
+                child_rest = children.remove(child)
+                for leaf in child.get_terminals():
+                    leaf_1 = leaf.name
+                    for rest_child in child_rest:
+                        for leaf in rest_child.get_terminals()
+                            leaf_2 = leaf.name
+                            distance_li.append(distance_dataframe[leaf_1][leaf_2])
+                if sum(distance_li) / len(distance_li) < min_number:
+                    newtree.collapse(child)
     Phylo.write(newtree, file_name_with_path + '_modified_tree.nwk', 'newick')
     return 0
 
@@ -238,8 +243,8 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
             bar_data = file_name_with_path+"_bar_data.csv"
             f = open(bar_data,"w")
             for i in results:
-            		f.write(i+"\n")
-						f.close()
+                f.write(i+"\n")
+			f.close()
             divide_line = plot(results, file_name_with_path)
             divide_line_list.append(divide_line)
             modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
