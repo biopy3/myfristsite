@@ -130,23 +130,23 @@ def compute_pairwise_distance(conn,file_name_with_path,model='K80',postfix='.aln
 
     return distance_dataframe
 
-def parse_tree(file_name_with_path, file_name, distance_dataframe, min_number):
+def parse_tree(file_name_with_path, distance_dataframe):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
-    newtree = copy.deepcopy(tree)
-    clades = newtree.get_nonterminals()
+    clades = tree.get_nonterminals()
     results = []
-    for i in range(len(clades)):
-        children = clades[i].clades
-        for child in children:
-            distance_li = []
-            child_rest = children.remove(child)
-            for leaf in child.get_terminals():
-                leaf_1 = leaf.name
-                for rest_child in child_rest:
-                    for leaf in rest_child.get_terminals():
-                        leaf_2 = leaf.name
-                        distance_li.append(distance_dataframe[leaf_1][leaf_2])
-            results.append(sum(distance_li) / len(distance_li))
+    for clade in clades:
+        children = clade.clades
+        pairs = list(itertools.combinations(children,2))
+        distance = []
+        for pair in pairs:
+            pair_distance = []
+            for leaf_x in pair[0].get_terminals():
+                leaf_x_name = leaf_x.name
+                for leaf_y in pair[0].get_terminals():
+                    leaf_y_name = leaf_y.name
+                    pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
+            distance.append(sum(pair_distance) / len(pair_distance))
+        results.append(sum(distance) / len(distance))
     return results
 
 def plot(results,file_name_with_path):
@@ -169,22 +169,44 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
     newtree = copy.deepcopy(tree)
     clades = newtree.get_nonterminals()
-    for i in range(len(clades)):
-        children = clades[i].clades
-        for child in children:
-            distance_li = []
-            if child.is_terminal():
-                continue
-            else:
-                child_rest = children.remove(child)
-                for leaf in child.get_terminals():
-                    leaf_1 = leaf.name
-                    for rest_child in child_rest:
-                        for leaf in rest_child.get_terminals():
-                            leaf_2 = leaf.name
-                            distance_li.append(distance_dataframe[leaf_1][leaf_2])
-                if sum(distance_li) / len(distance_li) < min_number:
-                    newtree.collapse(child)
+    start_leaives = []
+    for clade in clades:
+        if clade.is_preterminal():
+            start_leaives.append(clade)
+    for clade in start_leaives:
+        while newtree.root.get_path(clade):
+            if len(newtree.root.get_path(clade)) >= 2:
+                pairs = list(itertools.combinations(newtree.root.get_path(clade)[-2].clades, 2))
+                distance = []
+                for pair in pairs:
+                    pair_distance = []
+                    for leaf_x in pair[0].get_terminals():
+                        leaf_x_name = leaf_x.name
+                        for leaf_y in pair[1].get_terminals():
+                            leaf_y_name = leaf_y.name
+                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
+                if sum(distance) / len(distance) > min_number:
+                    for child in newtree.root.get_path(clade)[-2].clades:
+                        child.collapse_all()
+                    break
+                else:
+                    clade = newtree.root.get_path(clade)[-2]
+            else:  #Only case ::len(newtree.root.get_path(clade)) >= 2
+                pairs = list(itertools.combinations(newtree.root.clades, 2))
+                distance = []
+                for pair in pairs:
+                    pair_distance = []
+                    for leaf_x in pair[0].get_terminals():
+                        leaf_x_name = leaf_x.name
+                        for leaf_y in pair[1].get_terminals():
+                            leaf_y_name = leaf_y.name
+                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
+                if sum(distance) / len(distance) > min_number:
+                    for child in newtree.root.get_path(clade)[-2].clades:
+                        child.collapse_all()
+                    break
+                else:
+                    clade = newtree.root
     Phylo.write(newtree, file_name_with_path + '_modified_tree.nwk', 'newick')
     return 0
 
