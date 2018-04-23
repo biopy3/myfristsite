@@ -185,6 +185,7 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
                         for leaf_y in pair[1].get_terminals():
                             leaf_y_name = leaf_y.name
                             pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
+                    distance.append(sum(pair_distance) / len(pair_distance))
                 if sum(distance) / len(distance) > min_number:
                     for child in newtree.root.get_path(clade)[-2].clades:
                         child.collapse_all()
@@ -201,6 +202,7 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
                         for leaf_y in pair[1].get_terminals():
                             leaf_y_name = leaf_y.name
                             pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
+                    distance.append(sum(pair_distance) / len(pair_distance))
                 if sum(distance) / len(distance) > min_number:
                     for child in newtree.root.get_path(clade)[-2].clades:
                         child.collapse_all()
