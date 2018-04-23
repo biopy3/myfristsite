@@ -153,6 +153,7 @@ def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
     bins = math.ceil(max(results)/0.005)
+    print(results,bins)
     n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='blue', alpha=1)
     plt.title("Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.")
     plt.xlabel("genetic distance")
