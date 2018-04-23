@@ -261,7 +261,7 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
         #save bar_data
         bar_data_path = file_name_with_path+"_bar_data.csv"
         bar_data = np.array(results)
-        bar_data.shape = (bar_data.shape(0), 1)
+        bar_data.shape = (bar_data.shape[0], 1)
         np.savetxt(bar_data_path, bar_data, delimiter=',')
 
         divide_line = plot(results, file_name_with_path)
