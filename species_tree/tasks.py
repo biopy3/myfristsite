@@ -70,9 +70,9 @@ def clustal2phy(file_name_with_path):
 
     return dict
 
-def fasta2phy(file_name_with_path):
+def fasta2phy(file_name_with_path,postfix):
     #try:
-    align = AlignIO.read(file_name_with_path + ".fas","fasta")
+    align = AlignIO.read(file_name_with_path + postfix,"fasta")
     #except:
     #  align = AlignIO.read(file_name_with_path + ".fasta","fasta")
     length = 2
@@ -247,7 +247,7 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
         file_name = 'species_tree/recordsfile/' + file_name_with_path.split('species_tree/recordsfile/')[-1]
         postfix = os.path.splitext(i)[1]
         if  postfix == '.fasta' or postfix == '.fas':
-            dict = fasta2phy(file_name_with_path)
+            dict = fasta2phy(file_name_with_path,postfix)
         else:
             dict = clustal2phy(file_name_with_path)
         construc_tree(file_name_with_path, file_name,dict)
