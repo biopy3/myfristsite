@@ -192,7 +192,7 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
                     break
                 else:
                     clade = newtree.root.get_path(clade)[-2]
-            else:  #Only case ::len(newtree.root.get_path(clade)) >= 2
+            else:  #Only case ::len(newtree.root.get_path(clade)) == 1
                 pairs = list(itertools.combinations(newtree.root.clades, 2))
                 distance = []
                 for pair in pairs:
@@ -204,7 +204,7 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
                             pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
                     distance.append(sum(pair_distance) / len(pair_distance))
                 if sum(distance) / len(distance) > min_number:
-                    for child in newtree.root.get_path(clade)[-2].clades:
+                    for child in newtree.root.clades:
                         child.collapse_all()
                     break
                 else:
