@@ -5,7 +5,6 @@ from .models import Records,clustalx_model
 from django.core.mail import EmailMessage
 from django.conf import settings
 import os,sys
-from Bio.Align.Applications import ClustalwCommandline
 from Bio.Phylo.Applications import PhymlCommandline
 from Bio import Phylo
 import itertools
@@ -133,27 +132,41 @@ def compute_pairwise_distance(conn,file_name_with_path,model='K80',postfix='.aln
 def parse_tree(file_name_with_path, distance_dataframe):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
     clades = tree.get_nonterminals()
-    results = []
+    start_leaives = []
     for clade in clades:
-        children = clade.clades
-        pairs = list(itertools.combinations(children,2))
-        distance = []
-        for pair in pairs:
-            pair_distance = []
-            for leaf_x in pair[0].get_terminals():
-                leaf_x_name = leaf_x.name
-                for leaf_y in pair[0].get_terminals():
-                    leaf_y_name = leaf_y.name
-                    pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
-            distance.append(sum(pair_distance) / len(pair_distance))
-        results.append(sum(distance) / len(distance))
-    return results
+        if clade.is_preterminal():
+            start_leaives.append(clade)
+    sisters_distance = []
+    for clade in start_leaives:
+        while tree.root.get_path(clade):
+            if len(tree.root.get_path(clade)) >= 2:
+                pairs = list(itertools.combinations(tree.root.get_path(clade)[-2].clades, 2))
+                for pair in pairs:
+                    pair_distance = []
+                    for leaf_x in pair[0].get_terminals():
+                        leaf_x_name = leaf_x.name
+                        for leaf_y in pair[1].get_terminals():
+                            leaf_y_name = leaf_y.name
+                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
+                    sisters_distance.append(sum(pair_distance) / len(pair_distance))
+                clade = tree.root.get_path(clade)[-2]
+            else:  # Only case ::len(newtree.root.get_path(clade)) == 1
+                pairs = list(itertools.combinations(tree.root.clades, 2))
+                for pair in pairs:
+                    pair_distance = []
+                    for leaf_x in pair[0].get_terminals():
+                        leaf_x_name = leaf_x.name
+                        for leaf_y in pair[1].get_terminals():
+                            leaf_y_name = leaf_y.name
+                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
+                    sisters_distance.append(sum(pair_distance) / len(pair_distance))
+                clade = tree.root
+    return sisters_distance
 
 def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
     bins = math.ceil(max(results)/0.005)
-    print(results,bins)
     n,bins,patches = plt.hist(x, bins=bins, normed=1, histtype='bar', facecolor='blue', alpha=1)
     plt.title("Frequency distribution of K2P genetic distances \n obtained from successive sister-clade pairwise.")
     plt.xlabel("genetic distance")
