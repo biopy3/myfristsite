@@ -243,8 +243,8 @@ def list_spcies(file_name_with_path):
                         for leaf in leaives[:-1]:
                             f.write(leaf.name + ',')
                         f.write(leaives[-1].name + '\n')
-            else:  #Only case ::len(newtree.root.get_path(clade)) == 1
-		for i in tree.root.clades:
+            else:
+                for i in tree.root.clades:
                     if i.is_preterminal():
                         leaives = i.get_terminals()
                         for leaf in leaives[:-1]:
