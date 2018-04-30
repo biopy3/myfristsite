@@ -230,12 +230,27 @@ def list_spcies(file_name_with_path):
     f = open(file_name_with_path + "_species_list.csv",'w+',encoding='utf-8')
     tree  = Phylo.read(file_name_with_path + "_modified_tree.nwk",'newick')
     clades = tree.get_nonterminals()
+    start_leaives = []
     for clade in clades:
-        if clade.is_preterminal:
-            li = clade.get_terminals()
-            for leaf in li[:-1]:
-                f.write(leaf.name + ',')
-            f.write(li[-1].name + '\n')
+        if clade.is_preterminal():
+            start_leaives.append(clade)
+    for clade in start_leaives:
+        while tree.root.get_path(clade):
+            if len(tree.root.get_path(clade)) >= 2:
+                for i in tree.root.get_path(clade)[-2].clades:
+                    if i.is_preterminal():
+                        leaives = i.get_terminals()
+                        for leaf in leaives[:-1]:
+                            f.write(leaf.name + ',')
+                        f.write(leaives[-1].name + '\n')
+            else:  #Only case ::len(newtree.root.get_path(clade)) == 1
+                for i in tree.root.clades:
+                    if i.is_preterminal():
+                        leaives = i.get_terminals()
+                            for leaf in leaives[:-1]:
+                                f.write(leaf.name + ',')
+                            f.write(leaives[-1].name + '\n')
+                clade = newtree.root
     f.close()
     return 0
 
