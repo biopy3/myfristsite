@@ -251,7 +251,7 @@ def list_spcies(file_name_with_path):
                         for leaf in leaives[:-1]:
                             f.write(leaf.name + ',')
                         f.write(leaives[-1].name + '\n')
-                clade = newtree.root
+                clade = tree.root
     f.close()
     return 0
 
