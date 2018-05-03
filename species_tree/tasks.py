@@ -236,7 +236,7 @@ def list_spcies(file_name_with_path):
             leaives = clade.get_terminals()
             for leaf in leaives[:-1]:
                 f.write(leaf.name + ',')
-            f.write(leaives[-1] + '\n')
+            f.write(leaives[-1].name + '\n')
             start_leaives.append(clade)
     for clade in start_leaives:
         while tree.root.get_path(clade):
