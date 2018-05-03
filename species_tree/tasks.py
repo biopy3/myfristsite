@@ -237,22 +237,18 @@ def list_spcies(file_name_with_path):
     for clade in start_leaives:
         while tree.root.get_path(clade):
             if len(tree.root.get_path(clade)) >= 2:
-                for i in tree.root.get_path(clade)[-2].clades:
-                    if i.is_preterminal():
-                        leaives = i.get_terminals()
-                        for leaf in leaives[:-1]:
-                            f.write(leaf.name + ',')
-                        f.write(leaives[-1].name + '\n')
+                for i in tree.root.get_path(clade)[-2].clades.remove(clade):
+                    if i.is_terminal():
+                        f.write(i.name + '\n')
                 clade = tree.root.get_path(clade)[-2]
             else:
                 for i in tree.root.clades:
-                    if i.is_preterminal():
-                        leaives = i.get_terminals()
-                        for leaf in leaives[:-1]:
-                            f.write(leaf.name + ',')
-                        f.write(leaives[-1].name + '\n')
+                    if i.is_terminal():
+                        f.write(i.name + '\n')
                 clade = tree.root
     f.close()
+
+
     return 0
 
 def plot_divide_line(list,dir_path):
