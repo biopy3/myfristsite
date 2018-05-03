@@ -238,7 +238,8 @@ def list_spcies(file_name_with_path):
             for leaf in leaives[:-1]:
                 f.write(leaf.name + ',')
                 preterminals.append(leaf)
-            f.write(leaives[-1].name)
+            f.write(leaives[-1].name + '\n')
+            preterminals.append(leaives[-1])
 
     for preterminal in preterminals:
         terminals.remove(preterminals)
