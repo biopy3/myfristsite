@@ -233,11 +233,15 @@ def list_spcies(file_name_with_path):
     start_leaives = []
     for clade in clades:
         if clade.is_preterminal():
+            leaives = clade.get_terminals()
+            for leaf in leaives[:-1]:
+                f.write(leaf.name + ',')
+            f.write(leaives[-1] + '\n')
             start_leaives.append(clade)
     for clade in start_leaives:
         while tree.root.get_path(clade):
             if len(tree.root.get_path(clade)) >= 2:
-                for i in tree.root.get_path(clade)[-2].clades.remove(clade):
+                for i in tree.root.get_path(clade)[-2].clades:
                     if i.is_terminal():
                         f.write(i.name + '\n')
                 clade = tree.root.get_path(clade)[-2]
