@@ -242,7 +242,7 @@ def list_spcies(file_name_with_path):
             preterminals.append(leaives[-1])
 
     for preterminal in preterminals:
-        terminals.remove(preterminals)
+        terminals.remove(preterminal)
     for terminal in terminals:
         f.write(terminal.name + '\n')
     f.close()
