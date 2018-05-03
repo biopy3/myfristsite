@@ -230,29 +230,21 @@ def list_spcies(file_name_with_path):
     f = open(file_name_with_path + "_species_list.csv",'w+',encoding='utf-8')
     tree  = Phylo.read(file_name_with_path + "_modified_tree.nwk",'newick')
     clades = tree.get_nonterminals()
-    start_leaives = []
+    terminals = tree.get_terminals()
+    preterminals = []
     for clade in clades:
         if clade.is_preterminal():
             leaives = clade.get_terminals()
             for leaf in leaives[:-1]:
                 f.write(leaf.name + ',')
-            f.write(leaives[-1].name + '\n')
-            start_leaives.append(clade)
-    for clade in start_leaives:
-        while tree.root.get_path(clade):
-            if len(tree.root.get_path(clade)) >= 2:
-                for i in tree.root.get_path(clade)[-2].clades:
-                    if i.is_terminal():
-                        f.write(i.name + '\n')
-                clade = tree.root.get_path(clade)[-2]
-            else:
-                for i in tree.root.clades:
-                    if i.is_terminal():
-                        f.write(i.name + '\n')
-                clade = tree.root
+                preterminals.append(leaf)
+            f.write(leaives[-1].name)
+
+    for preterminal in preterminals:
+        terminals.remove(preterminals)
+    for terminal in terminals:
+        f.write(terminal.name + '\n')
     f.close()
-
-
     return 0
 
 def plot_divide_line(list,dir_path):
