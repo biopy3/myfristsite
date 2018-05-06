@@ -8,7 +8,6 @@ import os,sys
 from Bio.Phylo.Applications import PhymlCommandline
 from Bio import Phylo
 import itertools
-import pandas as pd
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -103,12 +102,11 @@ def parse_alignment(file_name_with_path):
     return align_dataframe
 
 def compute_pairwise_distance(conn,file_name_with_path,model='K80',postfix='.aln'):
-    conn.r.file = file_name_with_path + postfix
-
-#        model   a character string specifying the evolutionary model to be used;
- #               must be one of "raw", "N", "TS", "TV", "JC69", "K80" (the default),
-  #              "F81", "K81", "F84", "BH87", "T92", "TN93", "GG95", "logdet", "paralin", "indel", or "indelblock".
+    #        model   a character string specifying the evolutionary model to be used;
+    #               must be one of "raw", "N", "TS", "TV", "JC69", "K80" (the default),
+    #              "F81", "K81", "F84", "BH87", "T92", "TN93", "GG95", "logdet", "paralin", "indel", or "indelblock".
     conn.r.model = model
+    conn.r.infile_path = file_name_with_path + postfix
     r_script = '''
         library('ape')
         compute_distance <- function(file,model)
@@ -116,51 +114,38 @@ def compute_pairwise_distance(conn,file_name_with_path,model='K80',postfix='.aln
             alignment_data <- read.dna(file=file,format='fasta')
             index <- attr(alignment_data,"dimnames")[[1]]
             distance_data <- dist.dna(alignment_data,model=model,as.matrix=TRUE)
-            result <- list(a = distance_data,b = index)
+            result <- list(a=distance_data,b=index)
             return(result)
         }
-        result <- compute_distance(file,model)
+        result <- compute_distance(infile_path,model)
         distance_data <- result$a
         index <- result$b
         '''
     conn.eval(r_script)
-    distance_dataframe = pd.DataFrame(conn.r.distance_data,
-                                      index=list(conn.r.index), columns=list(conn.r.index))
+    distance_data_ndarray = np.array(conn.r.distance_data)
+    index = list(conn.r.index)
+    conn.close()
+    return distance_data_ndarray,index
 
-    return distance_dataframe
-
-def parse_tree(file_name_with_path, distance_dataframe):
+def parse_tree(file_name_with_path,distance_data_ndarray,index):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
     clades = tree.get_nonterminals()
-    start_leaives = []
     for clade in clades:
         if clade.is_preterminal():
-            start_leaives.append(clade)
+            clades.remove(clade)
     sisters_distance = []
-    for clade in start_leaives:
-        while tree.root.get_path(clade):
-            if len(tree.root.get_path(clade)) >= 2:
-                pairs = list(itertools.combinations(tree.root.get_path(clade)[-2].clades, 2))
-                for pair in pairs:
-                    pair_distance = []
-                    for leaf_x in pair[0].get_terminals():
-                        leaf_x_name = leaf_x.name
-                        for leaf_y in pair[1].get_terminals():
-                            leaf_y_name = leaf_y.name
-                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
-                    sisters_distance.append(sum(pair_distance) / len(pair_distance))
-                clade = tree.root.get_path(clade)[-2]
-            else:  # Only case ::len(newtree.root.get_path(clade)) == 1
-                pairs = list(itertools.combinations(tree.root.clades, 2))
-                for pair in pairs:
-                    pair_distance = []
-                    for leaf_x in pair[0].get_terminals():
-                        leaf_x_name = leaf_x.name
-                        for leaf_y in pair[1].get_terminals():
-                            leaf_y_name = leaf_y.name
-                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
-                    sisters_distance.append(sum(pair_distance) / len(pair_distance))
-                clade = tree.root
+    for clade in clades:
+        pairs = list(itertools.combinations(clades.clades, 2))
+        for pair in pairs:
+            pair_distance = []
+            for leaf_x in pair[0].get_terminals():
+                distance = []
+                leaf_x_name = leaf_x.name
+                for leaf_y in pair[1].get_terminals():
+                    leaf_y_name = leaf_y.name
+                    distance.append(distance_data_ndarray[index.index(leaf_x_name)][index.index(leaf_y_name)])
+            pair_distance.append(sum(distance) / len(distance))
+        sisters_distance.append(sum(pair_distance) / len(pair_distance))
     return sisters_distance
 
 def plot(results,file_name_with_path):
@@ -179,7 +164,7 @@ def plot(results,file_name_with_path):
             break
     return (bins[i+1])
 
-def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
+def modify_tree(file_name_with_path, file_name, distance_data_ndarray, index, min_number):
     tree = Phylo.read(file_name_with_path + ".phy_phyml_tree.txt", "newick")
     newtree = copy.deepcopy(tree)
     clades = newtree.get_nonterminals()
@@ -189,40 +174,43 @@ def modify_tree(file_name_with_path, file_name, distance_dataframe, min_number):
             start_leaives.append(clade)
     for clade in start_leaives:
         while newtree.root.get_path(clade):
-            if len(newtree.root.get_path(clade)) >= 2:
-                pairs = list(itertools.combinations(newtree.root.get_path(clade)[-2].clades, 2))
-                distance = []
-                for pair in pairs:
-                    pair_distance = []
-                    for leaf_x in pair[0].get_terminals():
-                        leaf_x_name = leaf_x.name
-                        for leaf_y in pair[1].get_terminals():
-                            leaf_y_name = leaf_y.name
-                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
-                    distance.append(sum(pair_distance) / len(pair_distance))
-                if sum(distance) / len(distance) > min_number and len(distance) > 0:
-                    for child in newtree.root.get_path(clade)[-2].clades:
-                        child.collapse_all()
-                    break
-                else:
-                    clade = newtree.root.get_path(clade)[-2]
-            else:  #Only case ::len(newtree.root.get_path(clade)) == 1
-                pairs = list(itertools.combinations(newtree.root.clades, 2))
-                distance = []
-                for pair in pairs:
-                    pair_distance = []
-                    for leaf_x in pair[0].get_terminals():
-                        leaf_x_name = leaf_x.name
-                        for leaf_y in pair[1].get_terminals():
-                            leaf_y_name = leaf_y.name
-                            pair_distance.append(distance_dataframe[leaf_x_name][leaf_y_name])
-                    distance.append(sum(pair_distance) / len(pair_distance))
-                if sum(distance) / len(distance) > min_number and len(distance) > 0:
-                    for child in newtree.root.clades:
-                        child.collapse_all()
-                    break
-                else:
-                    clade = newtree.root
+            try:
+                if len(newtree.root.get_path(clade)) >= 2:
+                    pairs = list(itertools.combinations(newtree.root.get_path(clade)[-2].clades, 2))
+                    distance = []
+                    for pair in pairs:
+                        pair_distance = []
+                        for leaf_x in pair[0].get_terminals():
+                            leaf_x_name = leaf_x.name
+                            for leaf_y in pair[1].get_terminals():
+                                leaf_y_name = leaf_y.name
+                                pair_distance.append(distance_data_ndarray[index.index(leaf_x_name)][index.index(leaf_y_name)])
+                        distance.append(sum(pair_distance) / len(pair_distance))
+                    if sum(distance) / len(distance) > min_number and len(distance) > 0:
+                        for child in newtree.root.get_path(clade)[-2].clades:
+                            child.collapse_all()
+                        break
+                    else:
+                        clade = newtree.root.get_path(clade)[-2]
+                else:  #Only case ::len(newtree.root.get_path(clade)) == 1
+                    pairs = list(itertools.combinations(newtree.root.clades, 2))
+                    distance = []
+                    for pair in pairs:
+                        pair_distance = []
+                        for leaf_x in pair[0].get_terminals():
+                            leaf_x_name = leaf_x.name
+                            for leaf_y in pair[1].get_terminals():
+                                leaf_y_name = leaf_y.name
+                                pair_distance.append(distance_data_ndarray[index.index(leaf_x_name)][index.index(leaf_y_name)])
+                        distance.append(sum(pair_distance) / len(pair_distance))
+                    if sum(distance) / len(distance) > min_number and len(distance) > 0:
+                        for child in newtree.root.clades:
+                            child.collapse_all()
+                        break
+                    else:
+                        clade = newtree.root
+            except:
+                continue
     Phylo.write(newtree, file_name_with_path + '_modified_tree.nwk', 'newick')
     return 0
 
@@ -277,12 +265,12 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
 
             conn = pyRserve.connect(host='localhost', port=6311)
 
-            distance_dataframe = compute_pairwise_distance(conn,file_name_with_path,model,postfix)
+            distance_data_ndarray,index = compute_pairwise_distance(conn,file_name_with_path,model,postfix)
 
             matrix_path = file_name_with_path + '_distance_matrix.csv'
-            distance_dataframe.to_csv(matrix_path)
+            np.savetxt(matrix_path,distance_data_ndarray, delimiter=",")
 
-            results = parse_tree(file_name_with_path, distance_dataframe)
+            results = parse_tree(file_name_with_path,distance_data_ndarray,index)
             #save bar_data
             bar_data_path = file_name_with_path+"_bar_data.csv"
             bar_data = np.array(results)
@@ -291,7 +279,7 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
 
             divide_line = plot(results, file_name_with_path)
             divide_line_list.append(divide_line)
-            modify_tree(file_name_with_path, file_name, distance_dataframe, divide_line)
+            modify_tree(file_name_with_path, file_name, distance_data_ndarray, index, divide_line)
 
             list_spcies(file_name_with_path)
             successed_file.append(i)
