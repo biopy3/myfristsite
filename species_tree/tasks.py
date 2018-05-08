@@ -135,7 +135,7 @@ def parse_tree(file_name_with_path,distance_data_ndarray,index):
             clades.remove(clade)
     sisters_distance = []
     for clade in clades:
-        pairs = list(itertools.combinations(clades.clades, 2))
+        pairs = list(itertools.combinations(clade.clades, 2))
         for pair in pairs:
             pair_distance = []
             for leaf_x in pair[0].get_terminals():
