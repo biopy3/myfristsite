@@ -251,41 +251,43 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
     error_file = []
     successed_file = []
     for i in file_path_list:
-        try:
-            infile_path = i
-            file_name_with_path = os.path.splitext(i)[0]
+        #try:
+        infile_path = i
+        file_name_with_path = os.path.splitext(i)[0]
 
-            file_name = 'species_tree/recordsfile/' + file_name_with_path.split('species_tree/recordsfile/')[-1]
-            postfix = os.path.splitext(i)[1]
-            if  postfix == '.fasta' or postfix == '.fas':
-                dict = fasta2phy(file_name_with_path,postfix)
-            else:
-                dict = clustal2phy(file_name_with_path)
-            construc_tree(file_name_with_path, file_name,dict)
+        file_name = 'species_tree/recordsfile/' + file_name_with_path.split('species_tree/recordsfile/')[-1]
+        postfix = os.path.splitext(i)[1]
+        if  postfix == '.fasta' or postfix == '.fas':
+            dict = fasta2phy(file_name_with_path,postfix)
+        else:
+            dict = clustal2phy(file_name_with_path)
+        construc_tree(file_name_with_path, file_name,dict)
 
-            conn = pyRserve.connect(host='localhost', port=6311)
+        conn = pyRserve.connect(host='localhost', port=6311)
 
-            distance_data_ndarray,index = compute_pairwise_distance(conn,file_name_with_path,model,postfix)
+        distance_data_ndarray,index = compute_pairwise_distance(conn,file_name_with_path,model,postfix)
 
-            matrix_path = file_name_with_path + '_distance_matrix.csv'
-            np.savetxt(matrix_path,distance_data_ndarray, delimiter=",")
+        matrix_path = file_name_with_path + '_distance_matrix.csv'
+        np.savetxt(matrix_path,distance_data_ndarray, delimiter=",")
 
-            results = parse_tree(file_name_with_path,distance_data_ndarray,index)
-            #save bar_data
-            bar_data_path = file_name_with_path+"_bar_data.csv"
-            bar_data = np.array(results)
-            bar_data.shape = (bar_data.shape[0], 1)
-            np.savetxt(bar_data_path, bar_data, delimiter=',')
+        results = parse_tree(file_name_with_path,distance_data_ndarray,index)
+        #save bar_data
+        bar_data_path = file_name_with_path+"_bar_data.csv"
+        bar_data = np.array(results)
+        bar_data.shape = (bar_data.shape[0], 1)
+        np.savetxt(bar_data_path, bar_data, delimiter=',')
 
-            divide_line = plot(results, file_name_with_path)
-            divide_line_list.append(divide_line)
-            modify_tree(file_name_with_path, file_name, distance_data_ndarray, index, divide_line)
+        divide_line = plot(results, file_name_with_path)
+        divide_line_list.append(divide_line)
+        modify_tree(file_name_with_path, file_name, distance_data_ndarray, index, divide_line)
 
-            list_spcies(file_name_with_path)
-            successed_file.append(i)
+        list_spcies(file_name_with_path)
+        successed_file.append(i)
+        ‘’‘
         except:
             error_file.append(i)
             continue
+        ’‘’
 
     plot_divide_line(divide_line_list,dir_path)
     f = open(dir_path+"/error_file.txt",'w')
