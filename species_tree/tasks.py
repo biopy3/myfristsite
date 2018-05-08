@@ -283,11 +283,10 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
 
         list_spcies(file_name_with_path)
         successed_file.append(i)
-        ‘’‘
-        except:
-            error_file.append(i)
-            continue
-        ’‘’
+        
+        #except:
+        #    error_file.append(i)
+        #    continue
 
     plot_divide_line(divide_line_list,dir_path)
     f = open(dir_path+"/error_file.txt",'w')
