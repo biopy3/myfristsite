@@ -313,7 +313,6 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
     )
     email.content_subtype = "html"  # Main content is now text/html
     email.send()
-    conn.close()
 
     return 0
 
