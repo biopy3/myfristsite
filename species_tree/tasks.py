@@ -148,6 +148,20 @@ def parse_tree(file_name_with_path,distance_data_ndarray,index):
         sisters_distance.append(sum(pair_distance) / len(pair_distance))
     return sisters_distance
 
+
+def get_sisters_distance(distance_data_ndarray):
+    sisters_distance = []
+    m,n = distance_data_ndarray.shape
+    i = 0
+    while(i<m):
+        j = i+1
+        while(j<n):
+            sisters_distance.append(distance_data_ndarray[i][j])
+            j = j+1
+        i = i+1
+    return sisters_distance
+
+
 def plot(results,file_name_with_path):
     # 概率分布直方图
     x = results
@@ -270,7 +284,7 @@ def generate_tree(infile_path,send_email,user_name,access_code,model):
             matrix_path = file_name_with_path + '_distance_matrix.csv'
             np.savetxt(matrix_path,distance_data_ndarray, delimiter=",")
 
-            results = parse_tree(file_name_with_path,distance_data_ndarray,index)
+            results = get_sisters_distance(distance_data_ndarray)
             #save bar_data
             bar_data_path = file_name_with_path+"_bar_data.csv"
             bar_data = np.array(results)
