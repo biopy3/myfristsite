@@ -13,7 +13,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from Bio import AlignIO
-import copy,math,pyRserve,time
+import copy,math,time
 import zipfile,shutil
 import subprocess,os
 
